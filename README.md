@@ -1,6 +1,8 @@
 # EclipseBot
 Eclipse is a Discord bot written & maintained by Night Devs.
 
+![Banner](https://cdn.discordapp.com/attachments/770009593131827300/770256444988850197/banner.png)
+
 ### Who are the Night Devs?
 [@Elektroplayer](https://github.com/Elektroplayer) and [@Tegnio](https://github.com/Tegnio).
 

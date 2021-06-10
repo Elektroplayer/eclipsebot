@@ -1,12 +1,18 @@
-const addlib = require("../addLib.js");
-module.exports = {
-    run: async (bot,message,args,con)=> {try{
+const CONFIG = require("../config.json");
+const ERRORS = require('../lib/errors.js');
+// eslint-disable-next-line no-unused-vars
+const { Message } = require('discord.js'), Client      = require('../lib/client.js');
 
-        if(!message.member.permissions.has('MANAGE_MESSAGES')) return addlib.errors.notPerms(message);
-        if(!message.guild.members.cache.get(bot.user.id).permissions.has('MANAGE_MESSAGES')) return addlib.errors.botNotPerms(message);
-        if(!args[0]) return addlib.errors.notArgs(message, `Напиши **${con.prefix}help clear** для помощи по команде`);
-        if(!/^[0-9]{1,}$/g.test(args[0]) || args[0] == "0") return addlib.errors.falseArgs(message, "Можно вводить только цифры, больше 0!");
-        if(args[0]>1000) return addlib.errors.falseArgs(message, "Можно вводить только цифры, меньше 2000!");
+module.exports = {
+    /**
+     * @param {Message} message 
+     * @param {Client} bot
+     * @param {Array<String>} args
+     */
+    run: async (bot,message,args)=> {
+
+        if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help clear** для помощи по команде`);
+        if(!/^[0-9]{1,}$/g.test(args[0]) || args[0] == "0" || args[0]>2000) return ERRORS.falseArgs(message, "Можно вводить только цифры, больше 0 и меньше 2000!");
 
         await message.delete();
 
@@ -18,19 +24,21 @@ module.exports = {
             await message.channel.bulkDelete(i, true);
         }
 
-        addlib.errors.success(message,`Очищено ${args[0]} сообщений.`)
+        ERRORS.success(message,`Очищено ${args[0]} сообщений.`)
 
         return;
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["clear","clean"],
-    desc: "Очистка сообщений",
-    category: "Для модерации",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`**<count>** - Удалит заданное количество сообщений`)
-        .addField('Примеры:',`**${con.prefix}clear 10** - Удалит 10 сообщений`)
-        .addField('Алиасы:',`**${con.prefix}clean**`)
-        .addField('Могут использовать:','Люди с правом на управление сообщениями',true)
     },
-    show: true
+    name: ["clear","clean"],
+    description: "Очистка сообщений",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: ["MANAGE_MESSAGES"],
+        member: ["MANAGE_MESSAGES"]
+    },
+    help: {
+        category: "Модерация",
+        arguments: "**<count>** - Удалит заданное количество сообщений",
+        examples: `**${CONFIG.prefix}clear 10** - Удалит 10 сообщений`
+    }
 }

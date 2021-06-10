@@ -1,35 +1,53 @@
-const addlib   = require('../addLib.js');
 const package  = require('../package.json');
 const versions = require('../versions.json');
+const ERRORS   = require('../lib/errors.js');
+const CONFIG   = require('../config.json');
+const discord  = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const Client   = require('../lib/client.js');
+
 module.exports = {
-    run: async (bot,message,args,con)=> {try{
-        let ver = args[0] || package.version;
+    /**
+     * @param {Message} message 
+     * @param {Client} bot
+     * @param {Array<String>} args
+     */
+    run: async (bot,message,args)=> {
+        let ver = args[0] || package.version
+
         if(ver == "list") {
-            message.channel.send(con.defEmb.setTitle(`Список всех выпущенных версий:`).setFooter(con.footer)
-            .setDescription("1.0.0\n1.0.1\n1.1.0\n1.1.1\n1.1.2\n1.2.0\n1.3.0\n1.4.0\n1.4.1\n1.4.2\n1.4.3"))
+            let vers = [];
+            for (let key in versions) vers.push(key)
+
+            message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`Список всех выпущенных версий:`).setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+            .setDescription(vers.join(', ')))
             return
         }
-        if(!versions[ver]) return addlib.errors.castom(message, "Такой версии не существует!");
+        if(!versions[ver]) return ERRORS.custom(message, "Такой версии не существует!")
 
-        let embed = con.defEmb.setTitle(`Версия: ${ver}`).setFooter(con.footer);
+        let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`Версия: ${ver}`).setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
 
-        if(versions[ver].new)  embed.addField('Новое:',versions[ver].new);
-        if(versions[ver].edit) embed.addField('Изменено:', versions[ver].edit);
-        if(versions[ver].bugs) embed.addField('Исправления багов:',versions[ver].bugs);
-        if(versions[ver].desc) embed.addField('Что нового:',versions[ver].desc);
+        if(versions[ver].new)  embed.addField('Новое:',versions[ver].new)
+        if(versions[ver].edit) embed.addField('Изменено:', versions[ver].edit)
+        if(versions[ver].bugs) embed.addField('Исправления багов:',versions[ver].bugs)
+        if(versions[ver].desc) embed.addField('Что нового:',versions[ver].desc)
+        if(versions[ver].del)  embed.addField('Удалено:',versions[ver].del)
+        if(versions[ver].teh)  embed.addField('Техническое:',versions[ver].teh)
 
-        message.channel.send(embed);
-
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["version","ver"],
-    desc: "Что изменилось в последней версии",
-    category: "Общее",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`**Нет**`)
-        .addField('Примеры:',`**${con.prefix}version** - Версия бота и что нового`)
-        .addField('Другие алиасы:',`${con.prefix}ver`)
-        .addField('Могут использовать:','Все без исключений',true)
+        message.channel.send(embed)
     },
-    show: true
+    name: ["version","ver"],
+
+    description: "Что изменилось в последней версии",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: [],
+        member: []
+    },
+    help: {
+        category: "Общее",
+        arguments: "**Нет**",
+        examples: `**${CONFIG.prefix}version** - Версия бота и что нового`
+    }
 }

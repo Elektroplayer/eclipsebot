@@ -97,7 +97,7 @@ module.exports = {
             set.save().catch(err => console.log(err))
         })
     }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["privatevoices"],
+    name: ["privatevoices"],
     desc: "Настройка приватных каналов",
     category: "Настройки",
     helpEmbed: (con) => {

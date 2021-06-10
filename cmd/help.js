@@ -1,93 +1,72 @@
-const addlib = require('../addLib.js');
+const ERRORS   = require('../lib/errors.js');
+const UTILS    = require('../lib/utils.js');
+const CONFIG   = require('../config.json');
+
+const discord  = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const Client = require('../lib/client.js');
+
 module.exports = {
-    run: (bot,message,args,con)=> {try{
+    /**
+     * @param {discord.Message} message 
+     * @param {Client} bot
+     * @param {Array<String>} args
+     */
+    run: (bot,message,args)=> {
+        let footer      = CONFIG.templates.footer.replace('USERNAME', message.author.username);
+        let categories  = ["Общее", "Полезное", "Модерация", "Картинки", "Прочее"];
+        let emb         = new discord.MessageEmbed().setColor(CONFIG.colors.default).setFooter(footer)
+
         if(args[0]) {
-            let ok = false;
-            for(let i=0;i<=con.cmds.length-1;i++) {
-                for(let i2=0;i2<=con.cmds[i].cmd.length-1;i2++){
-                    if(con.cmds[i].cmd[i2] == args[0]){
-                        if(con.cmds[i].cmd[0] == "dog") message.channel.send(con.cmds[i].helpEmbed(con).setTitle(`Помощь по командам ${con.cmds[i].cmd}`).setDescription(con.cmds[i].desc).setFooter(con.footer))
-                        else message.channel.send(con.cmds[i].helpEmbed(con).setTitle(`Помощь по команде ${con.cmds[i].cmd[0]}`).setDescription(con.cmds[i].desc).setFooter(con.footer))
-                        ok = true;
-                        break;
-                    }
-                }
-                if(ok == true) break;
+            if(["1","2","3","4","5"].includes(args[0])) {
+                let value       = "";
+
+                bot.commands.filter(m => m.help && m.help.category == categories[args[0]-1]).forEach(elm => {
+                    value += `**${CONFIG.prefix}${elm.name[0]}** - ${elm.description}\n`
+                });
+
+                value = value == "" ? "Здесь пока что ничего нет..." : value;
+
+                return message.channel.send(
+                    emb.setTitle(categories[args[0]-1])
+                    .setDescription(`\`${CONFIG.prefix}help <команда>\` для углублённой помощи по команде\n\n` + value)
+                );
             }
-            if(!ok) addlib.errors.falseArgs(message,"Такой команды/алиаса не существует!")
-            return
-        }
 
-        let categories = con.categories;
-        let emb = con.defEmb.setTitle('Помощь').setDescription('`e.help <команда>` для углублённой помощи по команде')
-
-        let numbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
-        
-        let fields = {
-            "1️⃣": {
-                "name": "Содержание",
-                "value": ""
-            }
-        }
-
-        let titVal = "1. Содержание\n";
-
-        for(let i = 0;i<=categories.length-1;i++) {
-            titVal = titVal + `${i+2}. ${categories[i]}\n`;
-        }
-
-        fields['1️⃣'].value = titVal
-
-        let text = '';
-        let i1   = 0;
-        for(;i1<=categories.length-1;i1++) {
-            text = ''
-
-            for(let i2=0;i2<=con.cmds.length-1;i2++) {
-                if(con.cmds[i2].category == categories[i1]) text = text+`**${con.prefix}${con.cmds[i2].cmd}** - ${con.cmds[i2].desc}\n`
-            }
+            let c = bot.commands.find(m => m.name.includes(args[0])); //  c от command.
             
-            if(text == '') text = "Тут пока ничего нет...";
+            if(!c) return ERRORS.falseArgs(message,"Такой команды/алиаса не существует!");
 
-            fields[numbers[i1+1]] = {
-                "name": categories[i1],
-                "value": text
-            }
+            emb.setTitle(`Помощь по команде ${c.name[0]}`)
+            .setDescription(c.description)
+            .addField('Аргументы:', c.help.arguments)
+            .addField('Примеры:', c.help.examples)
+            .addField('Могут использовать:', `${UTILS.stringifyPermissions(c.permissions.member) || "Все без исключений"}`, true)
+
+            if(c.name.length != 1) emb.addField('Другие алиасы', UTILS.stringifyArray( c.name.slice(1), 'I. ', ', ') ,true);
+            
+            return message.channel.send(emb);
         }
 
-        message.channel.send(emb.addField(fields['1️⃣'].name,fields['1️⃣'].value).setFooter(con.footer)).then(async msg=> {
-            for(let i=0;i<=i1;i++){
-                await msg.react(numbers[i]);
-            }
-
-            numbers = numbers.slice(0,i1+1)
-
-            let filter = (reaction,user) => numbers.includes(reaction.emoji.name) && user.id === message.author.id
-            let collector  = msg.createReactionCollector(filter,{idle:30000});
-
-            collector.on('collect',(r) => {
-                msg.reactions.cache.get(r.emoji.name).users.remove(message.client.users.cache.get(message.author.id));
-
-                emb.fields = [fields[r.emoji.name]];
-
-                msg.edit(emb)
-            });
-            
-            collector.on('end', async () => {
-                try {
-                    await msg.reactions.removeAll()
-                } catch (error) {console.log(error)}
-            })
-        })
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["help","?","h"],
-    desc: "Помощь",
-    category: "Общее",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`**<command || Нет>** - Показать более подробную информацию о команде`)
-        .addField('Примеры:',`**${con.prefix}help** - Список всех команд\n**${con.prefix}help help** - Более подробная информация о help`)
-        .addField('Могут использовать:','Все без исключений',true)
+        message.channel.send(
+            new discord.MessageEmbed()
+            .setTitle('Помощь')
+            .setColor(CONFIG.colors.default)
+            .setDescription(`\`${CONFIG.prefix}help <цифра>\` для выбора страницы\n\n` + UTILS.stringifyArray(categories, 'I. ', '\n'))
+            .setFooter(footer)
+        );
     },
-    show: true
+    name: ["help","?","h"],
+    description: "Помощь",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: [],
+        member: []
+    },
+    help: {
+        category: "Общее",
+        arguments: "**Нет** - Показать оглавление\n**<number> - Показать список команд в этой группе**\n**<command>** - Показать более подробную информацию о команде",
+        examples: `**${CONFIG.prefix}help** - Оглавление\n**${CONFIG.prefix}help 4** - Команды в группе "Картинки"\n**${CONFIG.prefix}help help** - Более подробная информация о help`
+    }
 }

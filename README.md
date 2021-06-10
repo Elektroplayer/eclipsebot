@@ -8,43 +8,56 @@
 </p>
 
 # EclipseBot
-EclipseBot is an open-source, easy to use & selfhostable Discord bot written in JavaScript.
+Eclipse это самодостаточный Discord бот с открытым исходным кодом, простой в использовании и написанный на JavaScript.
 
-### Disclaimer (if self-hosted)
-You are not allowed to upload this bot to any service such as discordbotlist or top.gg, you are only allowed to host this bot for your community.
+### Дисклеймер (Если самостоятельное размещение)
+Вам не разрешено загружать этого бота на какой либо сервис как discordbotlist или top.gg, вам только разрешено использовать его только для ваших серверов!
 
-### Contributing
-- [Fork the repository](https://github.com/Elektroplayer/eclipsebot/fork)!
-- Clone your fork: `git clone https://github.com/your-username/eclipsebot.git`
-- Create your feature branch: `git checkout -b my-new-feature`
-- Commit your changes: `git commit -am 'Add some feature'`
-- Push to the branch: `git push origin my-new-feature`
-- Submit a pull request
 
-### Mini Wiki
+### Принять участие
+- [Сделайте форк репозитория](https://github.com/Lokilife/Eclipse/fork)!
+- Клонируйте ваш форк: `git clone https://github.com/your-username/Eclipse.git`
+- Создайте свою ветвь функций: `git checkout -b my-new-feature`
+- Примените ваши изменения: `git commit -am 'Add some feature'`
+- Отправьте в репозиторий: `git push origin my-new-feature`
+- Подтвердите pull request
 
-To start the bot, you need:
-1. Installed node.js.
-2. Installed dependencies. (Specified in [package.json](./package.json))
-3. Created config.json:
+### Мини Вики
+
+Чтобы запустить бота, вам необходимо:
+1. Установленный Node.JS.
+2. Установленные зависимости: `npm install`.
+3. Созданный config.json в корне:
 ```json
 {
-    "token": "Your discord token",
-    "mongoToken": "Your MongoDB token"
+    "token": "YOUR_BOT_TOKEN",
+    "mongoToken": "YOUR_MONGODB_AUTH",
+    "prefix": "e.",
+    "feedbackChannel": "770009648023339049",
+    "owners": ["283666032823107585"],
+    "colors": {
+        "default": "525592",
+        "errorRed": "cc0000",
+        "warnOrange": "fdb21a",
+        "successGreen": "00ce00"
+    },
+    "templates": {
+        "footer": "USERNAME | © Night Devs"
+    }
 }
 ```
 
-**Please tell me about the bugs or optimization methods!**
+**Пожалуйста, расскажите мне об ошибках или методах оптимизации!**
 
-### Authors
+### Участники проекта (указаны ники в Discord):
 **EclipseBot** © Night Devs<br>
-Authored by [Electroplayer](https://github.com/Elektroplayer)<br>
-[Bot support](https://discord.gg/PHuvYMrvdr)
 
-### Acknowledgments
-Ueuecoyotl - Looks for grammatical errors. <br>
-Lookins - Looks for incorrectly working commands.<br>
-Autoplayer - Hosts the bot.<br>
+`[ElectroPlayer]#0256\` - Разработчик, владелец проекта<br>
+`Lokilife#7962\` - Очень продвинул разработку бота и улучшил мои познания в JS. *Спасибо...*<br>
+`GitRonin#8012\` - Разработчик большей Front-End части сайта<br>
+`Lookins#4727\` - Тестеровщик, баг хантер<br>
+`[Ueuecoyotl]#4032\` - Редактор<br>
+`𝓐𝓤𝓣𝓞𝓟𝓛𝓐𝓨𝓔𝓡 [BF]#4324\` - Хост-провайдер<br>
 
-### License
+### Лицензия
 [BSD 3-Clause](./LICENSE)

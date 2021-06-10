@@ -1,20 +1,31 @@
-const fetch   = require('node-fetch');
-const addlib  = require('../addLib.js');
+const UTILS   = require('../lib/utils.js');
+const CONFIG  = require('../config.json');
+
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-    run: async (bot,message,args,con)=> {try{
-        fetch(`https://some-random-api.ml/animu/wink`).then(res => res.json().catch(()=> addlib.errors.APIErrors(message))).then(json => {
-            message.channel.send(con.defEmb.setTitle(`${message.author.username} подмигивает`).setImage(json.link).setFooter(con.footer));
-        });
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["wink"],
-    desc: "Подмигнуть",
-    category: "Картинки",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`**Нет**`)
-        .addField('Примеры:',`**${con.prefix}wink** - Подмигни)`)
-        .addField('Могут использовать:','Все без исключений',true)
+    run: async (bot,message)=> {
+        let response = await UTILS.getJsonResponse(`https://some-random-api.ml/animu/wink`);
+        
+        message.channel.send(
+            new MessageEmbed()
+            .setColor(CONFIG.colors.default)
+            .setTitle(`${message.author.username} подмигивает`)
+            .setImage(response.link)
+            .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+        )
     },
-    show: true
+    name: ["wink"],
+    description: "Подмигнуть",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: [],
+        member: []
+    },
+    help: {
+        category: "Картинки",
+        arguments: "**Нет**",
+        examples: `**${CONFIG.prefix}wink** - Подмигни)`
+    }
 }

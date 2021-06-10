@@ -1,19 +1,31 @@
-const addlib  = require('../addLib.js');
+const UTILS   = require('../lib/utils.js');
+const CONFIG  = require('../config.json');
+
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-    run: async (bot,message,args,con)=> {try{
-        let rand = Math.floor(Math.random()*19)+1;
+    run: async (bot,message)=> {
+        let response = await UTILS.getJsonResponse(`https://nekos.life/api/v2/img/smug`);
 
-        message.channel.send(con.defEmb.setTitle(`${message.author.username} доволен собой`).setImage(`https://cdn.nekos.life/smug/smug_0${(rand+"").length==2 ? rand+"" : "0"+(rand+"")}.gif`).setFooter(con.footer));
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["smug"],
-    desc: "Улыбнуться",
-    category: "Картинки",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`**Нет**`)
-        .addField('Примеры:',`**${con.prefix}smug** - Улыбнись)`)
-        .addField('Могут использовать:','Все без исключений',true)
+        message.channel.send(
+            new MessageEmbed()
+            .setColor(CONFIG.colors.default)
+            .setTitle(`${message.author.username} доволен`)
+            .setImage(response.url)
+            .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+        )
     },
-    show: true
+    name: ["smug"],
+    description: "Улыбнуться",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: [],
+        member: []
+    },
+    help: {
+        category: "Картинки",
+        arguments: "**Нет**",
+        examples: `**${CONFIG.prefix}smug** - Улыбнись)`
+    }
 }

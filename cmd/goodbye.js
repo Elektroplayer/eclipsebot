@@ -191,7 +191,7 @@ module.exports = {
 
         })
     }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["goodbye"],
+    name: ["goodbye"],
     desc: "Настройка прощаний",
     category: "Настройки",
     helpEmbed: (con) => {

@@ -1,32 +1,46 @@
-const addlib = require('../addLib.js');
+const ERRORS  = require('../lib/errors.js');
+const CONFIG  = require('../config.json');
+const discord = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const Client = require('../lib/client.js');
+
 module.exports = {
-    run: async (bot,message,args,con)=> {try{
+    /**
+     * @param {discord.Message} message 
+     * @param {Client} bot
+     * @param {Array<String>} args
+     */
+    run: async (bot,message,args)=> {
         let feedback = args.join(" ");
     
-        if (!feedback) return addlib.errors.notArgs(message, `Напиши **${con.prefix}help feedback** для помощи по команде`);
-        if (!con.feedBackChannel || con.feedBackChannel === "") return;
+        if (!feedback) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help feedback** для помощи по команде`);
+        if (!CONFIG.feedBackChannel || CONFIG.feedBackChannel === "") return;
     
-        let embed = con.defEmb
+        let embed = new discord.MessageEmbed()
+        .setColor(CONFIG.colors.default)
         .setTitle(`Новый отзыв от ${message.author.tag}`)
         .addField('ID сервера:', message.guild.id, true)
         .addField('ID канала:', message.channel.id, true)
         .addField('ID сообщения:', message.id, true)
         .setDescription(feedback)
-        .setFooter(con.footer)
+        .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
         .setTimestamp();
     
-        bot.channels.cache.get(con.feedBackChannel).send(embed);
+        bot.channels.cache.get(CONFIG.feedBackChannel).send(embed);
     
-        addlib.errors.success(message,"Отзыв был успешно отправлен!");
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["feedback"],
-    desc: "Отправить отзыв",
-    category: "Общее",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`**<text>** - Текст отзыва`)
-        .addField('Примеры:',`**${con.prefix}feedback У тибя в feedback ашиба!** - Отправит отзыв с текстом "У тибя в feedback ашиба!"`)
-        .addField('Могут использовать:','Все без исключений',true)
+        ERRORS.success(message,"Спасибо за фидбек! Я активно исправляю недочёты своего бота и чужое мнение для меня далеко не последнее в приоритетах.");
     },
-    show: true
+    name: ["feedback"],
+    description: "Отправить отзыв",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: ["MANAGE_MESSAGES"],
+        member: ["MANAGE_MESSAGES"]
+    },
+    help: {
+        category: "Общее",
+        arguments: "**<text>** - Текст отзыва",
+        examples: `**${CONFIG.prefix}feedback У тибя в feedback ашиба!** - Отправит отзыв с текстом "У тибя в feedback ашиба!"`
+    }
 }

@@ -179,7 +179,7 @@ module.exports = {
             }
         })
     }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["settings"],
+    name: ["settings"],
     desc: "Настройка сервера",
     category: "Настройки",
     helpEmbed: (con) => {

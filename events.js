@@ -1,12 +1,13 @@
 const SETTINGS        = require('./models/settings.js');
-const addlib          = require('./addLib.js');
-const COLORS          = require('./colors.json');
+//const addlib          = require('./addLib.js');
+const COLORS          = require('./config.json').colors;
 const {MessageEmbed}  = require('discord.js');
+const ERRORS          = require('./lib/errors.js');
 
 function baseErrEmb_audit (set, member, value, bot) {
     if(set.other && set.other.logchannel) {
         if(member.guild.channels.cache.get(set.other.logchannel).permissionsFor(bot.user).has('SEND_MESSAGES')) 
-        addlib.errors.baseErr({channel: member.guild.channels.cache.get(set.other.logchannel)}, value);
+        ERRORS.baseErr({channel: member.guild.channels.cache.get(set.other.logchannel)}, value);
     }
     return;
 }
@@ -14,7 +15,7 @@ function baseErrEmb_audit (set, member, value, bot) {
 function castomErrEmb_audit (set,member,value,bot) {
     if(set.other && set.other.logchannel) {
         if(member.guild.channels.cache.get(set.other.logchannel).permissionsFor(bot.user).has('SEND_MESSAGES')) 
-        addlib.errors.castom({channel: member.guild.channels.cache.get(set.other.logchannel)}, value);
+        ERRORS.castom({channel: member.guild.channels.cache.get(set.other.logchannel)}, value);
     }
     return;
 }

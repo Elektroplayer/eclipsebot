@@ -201,7 +201,7 @@ module.exports = {
 
         })
     }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    cmd: ["welcome"],
+    name: ["welcome"],
     desc: "Настройка приветствий",
     category: "Настройки",
     helpEmbed: (con) => {

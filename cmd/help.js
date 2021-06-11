@@ -14,7 +14,7 @@ module.exports = {
      */
     run: (bot,message,args)=> {
         let footer      = CONFIG.templates.footer.replace('USERNAME', message.author.username);
-        let categories  = ["Общее", "Полезное", "Модерация", "Картинки", "Прочее"];
+        let categories  = ["Общее", "Картинки", "Модерация", "Настройки", "Прочее"];
         let emb         = new discord.MessageEmbed().setColor(CONFIG.colors.default).setFooter(footer)
 
         if(args[0]) {

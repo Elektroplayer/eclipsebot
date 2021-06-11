@@ -37,7 +37,6 @@ module.exports = {
         message.channel.send(embed)
     },
     name: ["version","ver"],
-
     description: "Что изменилось в последней версии",
     show: true,
     ownerOnly: false,

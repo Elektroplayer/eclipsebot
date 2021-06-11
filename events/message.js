@@ -63,7 +63,7 @@ module.exports = {
                     embed.setDescription("Спасибо! Отчёт отчёт об ошибке был отправлен. Очень скоро эта ошибка будет исправлена.")
                 }
                 
-                await message.edit(embed)
+                await msg.edit(embed)
             })
         }
     }

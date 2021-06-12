@@ -22,7 +22,7 @@ module.exports = {
         if (!command) return
         
         if (!message.member.permissions.has(command.permissions.member)) return ERRORS.notPerms(message, command.permissions.member.filter(p => !message.member.permissions.has(p)));
-        if (!message.guild.me.permissions.has(command.permissions.bot)) return ERRORS.botNotPerms(message, command.permissions.bot.filter(p =>message.guild.me.permissions.has(p)));
+        if (!message.guild.me.permissions.has(command.permissions.bot)) return ERRORS.botNotPerms(message, command.permissions.bot.filter(p => !message.guild.me.permissions.has(p)));
         if (command.ownerOnly && !CONFIG.owners.includes(message.author.id)) return ERRORS.ownerOnly(message);
 
         try { 

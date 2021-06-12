@@ -41,9 +41,9 @@ module.exports = {
             .setDescription(c.description)
             .addField('Аргументы:', c.help.arguments)
             .addField('Примеры:', c.help.examples)
-            .addField('Могут использовать:', `${UTILS.stringifyPermissions(c.permissions.member) || "Все без исключений"}`, true)
+            .addField('Могут использовать:', `${c.permissions.member.length !== 0 ? `Люди с этими правами: \`${UTILS.stringifyPermissions(c.permissions.member)}\`` : "Все без исключений"}`, true)
 
-            if(c.name.length != 1) emb.addField('Другие алиасы', UTILS.stringifyArray( c.name.slice(1), 'I. ', ', ') ,true);
+            if(c.name.length != 1) emb.addField('Другие алиасы', UTILS.stringifyArray( c.name.slice(1), '', ', ') ,true);
             
             return message.channel.send(emb);
         }

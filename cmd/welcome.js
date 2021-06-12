@@ -1,213 +1,256 @@
-const addlib    = require('../addLib.js');
-const settings  = require('../models/settings.js');
-const COLORS    = require('../colors.json');
+const CONFIG   = require('../config.json');
+const ERRORS   = require('../lib/errors.js');
+const UTILS    = require('../lib/utils.js');
+const discord  = require('discord.js');
+// eslint-disable-next-line no-unused-vars
+const Client   = require('../lib/client.js');
+const Welcome  = require('../models/welcome.js');
 
 module.exports = {
-    run: async (bot,message,args,con)=> {try{
-        if(!args[0]) return addlib.errors.notArgs(message, `Напиши **${con.prefix}help welcome** для помощи по команде`)
+    /**
+     * @param {Client} bot 
+     * @param {discord.Message} message 
+     * @param {Array<String>} args 
+     */
+    run: async (bot,message,args)=> {
+        if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help welcome** для помощи по команде`)
+        if(!['channel', 'embed', 'message', 'enable', 'disable'].includes( args[0].toLowerCase())) return ERRORS.falseArgs(message,`Напиши **${CONFIG.prefix}help welcome** для помощи по команде`);
 
-        if(message.author.id !== message.guild.owner.id) return addlib.errors.notPerms(message)
+        let footer  = CONFIG.templates.footer.replace('USERNAME', message.author.username);
 
-        settings.findOne({serverID:message.guild.id},(err,set)=> {
-            if(err) {
-                addlib.errors.unknow(message,`Код ошибки: \`\`\`${err}\`\`\``);
-                console.log(err);
+        Welcome.findOne({guildID:message.guild.id},(err,set)=> {
+            if(err) console.log(err);
+
+            if(args[0].toLowerCase() == 'enable') {
+                if(!set) {
+                    var newWelcome =  new Welcome({
+                        guildID: `${message.guild.id}`,
+                        channelID: "",
+                        embed: false,
+                        message: "Добро пожаловать на сервер, **{{USERNAME}}**! Ты уже {{COUNT}}!"
+                    })
+        
+                    newWelcome.save().catch(err => console.log(err));
+                    ERRORS.success(message, `Уведомления о новых людях включены!`);
+                    return;
+                }
+                ERRORS.custom(message, `Уведомления о новых людях уже включены!`);
+                return;
             }
 
-            if(!set) return addlib.errors.castom(message,"Обнови конфигурацию!",`${con.prefix}settings configurationupdate`);
+            if(!set) return ERRORS.custom(message, `Редактирование настроек невозможно!`,`Включите функцию: \`${CONFIG.prefix}welcome enable\` `);
 
-            if(!args[0]) {
-                return addlib.errors.notArgs(message, "<direct \\|\\| server \\|\\| autorole>")
-            } else if(args[0] == "direct") {
-                addlib.errors.doNotWorksNow(message);
-            } else if(args[0] == "server") {
-                if(!args[1]) return addlib.errors.notArgs(message, "<enabled \\|\\| embed \\|\\| channel \\|\\| message \\|\\| title \\|\\| description \\|\\| color \\|\\| avatar>");
-                else if(args[1]   == "enabled"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение: '+set.wellcome.server.enabled))
-                    let ena = args[2].toLowerCase()
-                    if(ena != "true" && ena != "false") return addlib.errors.falseArgs(message,"true или false?")    
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: (ena == 'true'),
-                            embed: set.wellcome.server.embed,
-                            channel: set.wellcome.server.channel,
-                            message: set.wellcome.server.message,
-                            title: set.wellcome.server.title,
-                            description: set.wellcome.server.description,
-                            color: set.wellcome.server.color,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
+            if(args[0].toLowerCase() == "disable") {
+                const embed = new discord.MessageEmbed()
+                .setColor(CONFIG.colors.warnOrange)
+                .setTitle("ВНИМАНИЕ! Выключение этой функции удалит сохранённые в базе данных настройки!")
+                .setDescription("Подтвердите свой выбор!")
+                .setFooter(footer)
+    
+                message.channel.send(embed).then(async msg => {
+                    await msg.react('✅');
+                    await msg.react('❌');
+        
+                    let reaction = (await msg.awaitReactions((reaction, user) => (reaction.emoji.name == "✅" || reaction.emoji.name == "❌") && user.id == message.author.id,{max: 1})).first()
+        
+                    await msg.reactions.removeAll();
+        
+                    if (reaction.emoji.name == '❌') embed.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
+                    else {
+                        Welcome.deleteOne({ guildID: message.guild.id }, (err) => { if(err) console.log(err) });
+
+                        embed.setTitle("Выключено...").setColor(CONFIG.colors.successGreen).setDescription('Функция успешно отключена!')
                     }
-                } else if(args[1] == "embed"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение: '+set.wellcome.server.embed))
-                    let ena = args[2].toLowerCase()
-                    if(ena != "true" && ena != "false") return addlib.errors.falseArgs(message,"true или false?")    
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: (ena == 'true'),
-                            channel: set.wellcome.server.channel,
-                            message: set.wellcome.server.message,
-                            title: set.wellcome.server.title,
-                            description: set.wellcome.server.description,
-                            color: set.wellcome.server.color,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
-                    }
-                } else if(args[1] == "channel"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение: '+(set.wellcome.server.channel || "**Нет...**")))
-                    if(!message.guild.channels.cache.get(args[2])) return addlib.errors.noChannel(message)
-                    let chan = message.guild.channels.cache.get(args[2] || message.mentions.channels.first().id)
-                    if(chan.type != 'text') return addlib.errors.falseArgs(message, `Канал не является текстовым.`)
-                    if (!chan.permissionsFor(bot.user).has('SEND_MESSAGES')) return addlib.errors.botNotPerms(message)
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: set.wellcome.server.embed,
-                            channel: chan.id,
-                            message: set.wellcome.server.message,
-                            title: set.wellcome.server.title,
-                            description: set.wellcome.server.description,
-                            color: set.wellcome.server.color,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
-                    }
-                } else if(args[1] == "message"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение:').setDescription(set.wellcome.server.message || "**Нет...**"))
-                    if(args.slice(2).join(' ').length>500) return addlib.errors.falseArgs(message, `Приветствие не может быть больше 500 символов. Сори...`)
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: set.wellcome.server.embed,
-                            channel: set.wellcome.server.channel,
-                            message: args.slice(2).join(' '),
-                            title: set.wellcome.server.title,
-                            description: set.wellcome.server.description,
-                            color: set.wellcome.server.color,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
-                    }
-                } else if(args[1] == "title"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение:').setDescription(set.wellcome.server.title || "**Нет...**"))
                     
-                    let title   = args.slice(2).join(' ')
-                    let length  = title.replace("MEMBER", "").length != title.length ? title.length+26 : title.length
-                    if(length>255) return addlib.errors.falseArgs(message, `Заголовок не может быть больше 255 символов. Сори...`)
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: set.wellcome.server.embed,
-                            channel: set.wellcome.server.channel,
-                            message: set.wellcome.server.message,
-                            title: title,
-                            description: set.wellcome.server.description,
-                            color: set.wellcome.server.color,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
+                    await msg.edit(embed);
+                })
+
+                return;
+            }
+
+            switch(args[0].toLowerCase()) {
+                case 'channel': {
+                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.channelID || `Не установлено`));
+
+                    let channels = UTILS.findChannels(message,args[1]);
+
+                    if(channels.length == 0) return ERRORS.noChannel(message);
+                    if(channels.length == 1) {
+                        set.channelID = channels[0].id;
+
+                        ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[0].id}\``)
+
+                        set.save().catch(err => console.log(err))
+                        return;
                     }
-                } else if(args[1] == "description"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение:').setDescription(set.wellcome.server.description || "**Нет...**"))
-                    
-                    let text   = args.slice(2).join(' ')
-                    let length  = text.replace("MEMBER", "").length != text.length ? text.length+26 : text.length
-                    if(length>600) return addlib.errors.falseArgs(message, `Описание не может быть больше 600 символов. Сори...`)
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: set.wellcome.server.embed,
-                            channel: set.wellcome.server.channel,
-                            message: set.wellcome.server.message,
-                            title: set.wellcome.server.title,
-                            description: text,
-                            color: set.wellcome.server.color,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
-                    }
-                } else if(args[1] == "color"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение: '+(set.wellcome.server.color || "**Нет...**")))
-                    let c = args[2].toLowerCase()
-                    if(!/[\da-f]{6}/.test(c) || c.length != 6) return addlib.errors.falseArgs(message,"Цвет нужно вводить в формате RRGGBB!")
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: set.wellcome.server.embed,
-                            channel: set.wellcome.server.channel,
-                            message: set.wellcome.server.message,
-                            title: set.wellcome.server.title,
-                            description: set.wellcome.server.description,
-                            color: c,
-                            avatar: set.wellcome.server.avatar
-                        },
-                        autorole: set.wellcome.autorole
-                    }
-                    set.save().catch(err => console.log(err))
-                    return message.channel.send(con.defEmb.setColor(c).setTitle('Конфигурация успешно изменена!'));
-                } else if(args[1] == "avatar"){
-                    if(!args[2]) return message.channel.send(con.defEmb.setTitle('Текущее значение: '+set.wellcome.server.avatar))
-                    let ena = args[2].toLowerCase()
-                    if(ena != "true" && ena != "false") return addlib.errors.falseArgs(message,"true или false?")    
-                    set.wellcome = {
-                        direct: set.wellcome.direct,
-                        server: {
-                            enabled: set.wellcome.server.enabled,
-                            embed: set.wellcome.server.embed,
-                            channel: set.wellcome.server.channel,
-                            message: set.wellcome.server.message,
-                            title: set.wellcome.server.title,
-                            description: set.wellcome.server.description,
-                            color: set.wellcome.server.color,
-                            avatar: (ena == 'true')
-                        },
-                        autorole: set.wellcome.autorole
-                    }
-                } else if(args[1] == "test") {
-                    let msg
-                    let member = message.member
-                    
-                    if(set.wellcome.server.embed == true) {
-                        msg = con.defEmb.setColor(set.wellcome.server.color || COLORS.default)
-                        .setTitle(set.wellcome.server.title.replace('MEMBER', member.user.username).replace('COUNT', member.guild.members.cache.size))
-                        .setDescription(set.wellcome.server.description.replace('MEMBER', member.user.username).replace('COUNT', member.guild.members.cache.size))
-                        
-                        if(set.wellcome.server.avatar) msg.setThumbnail(member.user.avatarURL() || member.user.defaultAvatarURL);
-                    } else {
-                        msg = set.wellcome.server.message.replace('MEMBER', member.user.username).replace('COUNT', member.guild.members.cache.size);
-                    }
+
+                    let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Я нашёл нескольких похожих каналов...').setFooter(footer);
+                    let descText = `Выбор **${CONFIG.prefix}<номер>**\n\n`, i = 1;
+                    channels.forEach( elm => {
+                        descText += `${i}. <#${elm.id}>\n`;
+                        i++;
+                    });
+        
+                    message.channel.send(embed.setDescription(descText)).then(msg => {
+                        let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
+                        let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 15000});
             
-                    return message.channel.send(msg);
-                } else return addlib.errors.falseArgs(message, "<enabled \\|\\| embed \\|\\| channel \\|\\| message \\|\\| title \\|\\| description \\|\\| color \\|\\| avatar>")
+                        collector.on('collect', (m) => {
+                            m.delete();
+                            msg.delete();
+        
+                            if(!/^\d+$/.test(m.content.slice(2)) ) return ERRORS.custom(message,'Это не цифра!');
+                            if(!channels[parseInt(m.content.slice(2))-1]) return ERRORS.custom(message,'Этого варианта нету!');
+
+                            set.channelID = channels[parseInt(m.content.slice(2))-1].id;
+
+                            ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[parseInt(m.content.slice(2))-1].id}\``)
+    
+                            set.save().catch(err => console.log(err))
+                            return;
+        
+                        });
+        
+                        collector.on('end', c => {
+                            if(c.size == 0) {
+                                msg.delete();
+                                return ERRORS.custom(message,'Время истекло!');
+                            }
+                        })
+                    })
+
+                    break;
+                }
+
+                case 'embed': {
+                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(`${set.embed}` || `Не установлено`));
+
+                    let variantsTrue  = ['+','true','yes','y'];
+                    let variantsFalse = ['-','false','no','n'];
+
+                    let fin;
+
+                    if( variantsTrue.includes(args[1]) ) fin = true;
+                    else if( variantsFalse.includes(args[1]) ) fin = false;
+                    else return ERRORS.falseArgs(message,`Можно использовать положительные значения \`${variantsTrue.join(', ')}\` или отрицательные  \`${variantsFalse.join(', ')}\``);
+
+                    if(set.embed == fin) return ERRORS.equalParameters(message,`${fin}`);
+
+                    let emb = new discord.MessageEmbed().setColor(CONFIG.colors.warnOrange)
+                    .setTitle('ВНИМАНИЕ! Изменение этого параметра приведёт к изменению параметра `message`')
+                    .setDescription(`Его значение будет изменено на \`${ fin ? `{ "title": "Добро пожаловать на сервер, {{USERNAME}}!", "description": "Ты уже {{COUNT}}", "color": 52736}` : `Добро пожаловать на сервер, {{USERNAME}}! Ты уже {{COUNT}}`}\``)
+                    .setFooter(footer);
+
+                    message.channel.send(emb).then(async msg => {
+                        await msg.react('✅');
+                        await msg.react('❌');
+            
+                        let reaction = (await msg.awaitReactions((reaction, user) => (reaction.emoji.name == "✅" || reaction.emoji.name == "❌") && user.id == message.author.id,{max: 1})).first()
+            
+                        await msg.reactions.removeAll();
+            
+                        if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
+                        else {
+                            set.embed    = fin;
+                            set.message  = fin ? `{ "title": "Добро пожаловать на сервер, {{USERNAME}}!", "description": "Ты уже {{COUNT}}", "color": 52736}` : `Добро пожаловать на сервер, {{USERNAME}}! Ты уже {{COUNT}}`
+    
+                            emb.setTitle(`Значение \`embed\` успешно установлено на \`${fin}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                            
+                            set.save().catch(err => console.log(err))
+                        }
+                        
+                        await msg.edit(emb);
+                    })
+
+                    break;
+                }
+
+                case 'message': {
+                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.message || `Не установлено`));
+
+                    let emb = new discord.MessageEmbed().setColor(CONFIG.colors.warnOrange)
+                    .setTitle('Тестовое сообщение').setDescription('Используйте галки, чтобы оставить или убрать');
+
+                    if(set.embed) {
+                        let stringForParse = `{"obj":[${args.slice(1).join(" ").replace(/(```(\w+)?)/g, "").trim()}]}`; //  Это то, что мы будем парсить.
+        
+                        let a
+                        try { //  Попыточка
+                            a = JSON.parse(stringForParse
+                            .replace(/{{USERNAME}}/g, message.author.username)
+                            .replace(/{{MENTION}}/g, `<@!${message.author.id}>`)
+                            .replace(/{{TAG}}/g, `${message.author.tag}`)
+                            .replace(/{{GUILDNAME}}/g, `${message.guild.name}`)
+                            .replace(/{{COUNT}}/g, `${message.guild.members.cache.size}`)).obj[0];
+                            message.channel.send({embed: a, disableMentions: "everyone"});
+                        } catch (err) { // Если не получилось
+                            return ERRORS.custom(message, `Перепроверь твой embed!`)
+                        }
+
+                        message.channel.send(emb).then(async msg => {
+                            await msg.react('✅');
+                            await msg.react('❌');
                 
-                addlib.errors.success(message, 'Конфигурация успешно изменена!')
-            } else if(args[0] == "autorole") {
-                addlib.errors.doNotWorksNow(message);
-            } else {
-                return addlib.errors.falseArgs(message, "<enabled \\|\\| channel \\|\\| category \\|\\| template>")
+                            let reaction = (await msg.awaitReactions((reaction, user) => (reaction.emoji.name == "✅" || reaction.emoji.name == "❌") && user.id == message.author.id,{max: 1})).first()
+                
+                            await msg.reactions.removeAll();
+                
+                            if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
+                            else {
+                                set.message = stringForParse;
+        
+                                emb.setTitle(`Значение \`message\` успешно установлено на \`${stringForParse}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                
+                                set.save().catch(err => console.log(err))
+                            }
+                            
+                            await msg.edit(emb);
+                        });
+
+                    } else {
+                        let text = args.slice(1).join(" ");
+
+                        message.channel.send(text.replace(/{{USERNAME}}/g, message.author.username)
+                        .replace(/{{MENTION}}/g, `<@!${message.author.id}>`)
+                        .replace(/{{TAG}}/g, `${message.author.tag}`)
+                        .replace(/{{GUILDNAME}}/g, `${message.guild.name}`)
+                        .replace(/{{COUNT}}/g, `${message.guild.members.cache.size}`))
+                        message.channel.send(emb).then(async msg => {
+                            await msg.react('✅');
+                            await msg.react('❌');
+                
+                            let reaction = (await msg.awaitReactions((reaction, user) => (reaction.emoji.name == "✅" || reaction.emoji.name == "❌") && user.id == message.author.id,{max: 1})).first()
+                
+                            await msg.reactions.removeAll();
+                
+                            if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
+                            else {
+                                set.message = text;
+        
+                                emb.setTitle(`Значение \`message\` успешно установлено на \`${text}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                
+                                set.save().catch(err => console.log(err))
+                            }
+                            
+                            await msg.edit(emb);
+                        });
+                    }
+                    break;
+                }
             }
-
-            set.save().catch(err => console.log(err))
-
-        })
-    }catch(err){addlib.helps.commandError(bot,message,con,err)}},
-    name: ["welcome"],
-    desc: "Настройка приветствий",
-    category: "Настройки",
-    helpEmbed: (con) => {
-        return con.defEmb
-        .addField('Аргументы:',`*Всё начинается на \`${con.prefix}welcome server\`*\n**enabled <true \\|\\| false \\|\\| Ничего>** - Включить/выключить/посмотреть значение приветствий на сервере\n**embed <true \\|\\| false \\|\\| Ничего>** - Включить/выключить/посмотреть значение отправки embed-сообщения на сервере\n**channel <ID \\|\\| Ничего>** - Записать новый ID/посмотреть ID записанного канала для приветствий на сервере\n**message <message \\|\\| Ничего>** - Записать новое/посмотреть старое приветствие на сервере. Может содержать такие переменные как: MEMBER и COUNT\n**title <title \\|\\| Ничего>** - Изменить/посмотреть заголовок embed-сообщения на сервере\n**description <description \\|\\| Ничего>** - Изменить/посмотреть описание embed-сообщения на сервере\n**avatar <true \\|\\| false \\|\\| Ничего>** - Включить/выключить/посмотреть текущее значение отправки аватара в embed-сообщении на сервере\n**color <color \\|\\| Ничего>** - Изменить/посмотреть цвет embed-сообщения на сервере\n**test** - Посмотреть получаемое приветствие`)
-        .addField('Могут использовать:','Создатель',true)
+        });
     },
-    show: true
+    name: ["welcome"],
+    description: "Настройка приветствий",
+    show: true,
+    ownerOnly: false,
+    permissions: {
+        bot: ["MANAGE_MESSAGES"],
+        member: ["ADMINISTRATOR"]
+    },
+    help: {
+        category: "Настройки",
+        arguments: "**enable/disable** - Включить/выключить приветствие\n**channel** - Узнать ID текущего канала для приветствий\n**channel <channel>** - Установить канал для приветствий *(можно использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее приветствие\n**message <message>** - Установить приветствие. Может содержать такие переменные, как {{USERNAME}}, {{MENTION}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
+        examples: `**${CONFIG.prefix}welcome enable** - Включаем\n**${CONFIG.prefix}welcome channel приветствия** - Выбираем канал\n**${CONFIG.prefix}welcome channel** - Смотрим\n**${CONFIG.prefix}welcome embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcome embed** - Проверяем\n**${CONFIG.prefix}welcome \\\`\\\`\\\`{ "title": "Хей, {{USERNAME}}! Вотсап бро?", "description": "Ты уже {{COUNT}} браток", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcome message** - Проверяем\n`
+    }
 }

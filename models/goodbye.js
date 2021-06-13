@@ -4,7 +4,7 @@ const xpSchema = mongoose.Schema({
     guildID: String,
     channelID: String,
     embed: Boolean,
-    message: mongoose.Types.Mixed
+    message: String
 })
 
 module.exports = mongoose.model("goodbye", xpSchema)

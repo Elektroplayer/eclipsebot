@@ -18,7 +18,7 @@ module.exports = {
             cmd          = messageArray[0].slice(CONFIG.prefix.length),
             args         = messageArray.slice(1)
 
-        const command = getCommand(bot, cmd)
+        const command = getCommand(bot, cmd.toLowerCase())
         if (!command) return
         
         if (!message.member.permissions.has(command.permissions.member)) return ERRORS.notPerms(message, command.permissions.member.filter(p => !message.member.permissions.has(p)));

@@ -55,11 +55,11 @@ module.exports = {
         
                     await msg.reactions.removeAll();
         
-                    if (reaction.emoji.name == '❌') embed.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
+                    if (reaction.emoji.name == '❌') embed.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!').setFooter('')
                     else {
                         Welcome.deleteOne({ guildID: message.guild.id }, (err) => { if(err) console.log(err) });
 
-                        embed.setTitle("Выключено...").setColor(CONFIG.colors.successGreen).setDescription('Функция успешно отключена!')
+                        embed.setTitle("Выключено...").setColor(CONFIG.colors.successGreen).setDescription('Функция успешно отключена!').setFooter('')
                     }
                     
                     await msg.edit(embed);
@@ -70,7 +70,11 @@ module.exports = {
 
             switch(args[0].toLowerCase()) {
                 case 'channel': {
-                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.channelID || `Не установлено`));
+                    if(!args[1]) {
+                        message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.channelID || `Не установлено`));
+                        if(!message.guild.channels.cache.get(set.channelID).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
+                        return;
+                    }
 
                     let channels = UTILS.findChannels(message,args[1]);
 
@@ -79,6 +83,8 @@ module.exports = {
                         set.channelID = channels[0].id;
 
                         ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[0].id}\``)
+
+                        if(!message.guild.channels.cache.get(channels[0].id).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
 
                         set.save().catch(err => console.log(err))
                         return;
@@ -149,12 +155,12 @@ module.exports = {
             
                         await msg.reactions.removeAll();
             
-                        if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
+                        if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!').setFooter('')
                         else {
                             set.embed    = fin;
                             set.message  = fin ? `{ "title": "Добро пожаловать на сервер, {{USERNAME}}!", "description": "Ты уже {{COUNT}}", "color": 52736}` : `Добро пожаловать на сервер, {{USERNAME}}! Ты уже {{COUNT}}`
     
-                            emb.setTitle(`Значение \`embed\` успешно установлено на \`${fin}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                            emb.setTitle(`Значение \`embed\` успешно установлено на \`${fin}\``).setColor(CONFIG.colors.successGreen).setDescription('').setFooter('')
                             
                             set.save().catch(err => console.log(err))
                         }

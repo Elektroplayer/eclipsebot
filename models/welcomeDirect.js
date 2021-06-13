@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const xpSchema = mongoose.Schema({
     guildID: String,
     embed: Boolean,
-    message: mongoose.Types.Mixed
+    message: String
 })
 
 module.exports = mongoose.model("welcomeDirect", xpSchema)

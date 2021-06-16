@@ -19,9 +19,9 @@ module.exports = {
         let embed = new discord.MessageEmbed()
         .setColor(CONFIG.colors.default)
         .setTitle(`Новый отзыв от ${message.author.tag}`)
-        .addField('ID сервера:', message.guild.id, true)
-        .addField('ID канала:', message.channel.id, true)
-        .addField('ID сообщения:', message.id, true)
+        .addField('Сервер:', `\`${message.guild.name}\` (ID: \`${message.guild.id}\`)`, true)
+        .addField('Канал:', `\`${message.channel.name}\` (ID: \`${message.channel.id}\`)`, true)
+        .addField('ID сообщения:', `\`${message.id}\``, true)
         .setDescription(feedback)
         .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
         .setTimestamp();

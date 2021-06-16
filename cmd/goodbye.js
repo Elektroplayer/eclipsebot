@@ -178,13 +178,12 @@ module.exports = {
                         try { //  Попыточка
                             a = JSON.parse(stringForParse
                             .replace(/{{USERNAME}}/g, message.author.username)
-                            .replace(/{{MENTION}}/g, `<@!${message.author.id}>`)
                             .replace(/{{TAG}}/g, `${message.author.tag}`)
                             .replace(/{{GUILDNAME}}/g, `${message.guild.name}`)
                             .replace(/{{COUNT}}/g, `${message.guild.members.cache.size}`)).obj[0];
                             message.channel.send({embed: a, disableMentions: "everyone"});
                         } catch (err) { // Если не получилось
-                            return ERRORS.custom(message, `Перепроверь твой embed!`)
+                            return ERRORS.custom(message, `Ошибка! Перепроверь твой embed!`, `Подробно: \`${err}\``);
                         }
 
                         message.channel.send(emb).then(async msg => {
@@ -210,8 +209,14 @@ module.exports = {
                     } else {
                         let text = args.slice(1).join(" ");
 
+                        if(text.length> 2000 + 
+                            (text.match(/{{USERNAME}}/g) ? text.match(/{{USERNAME}}/g).length * -20 : 0) + 
+                            (text.match(/{{TAG}}/g) ? text.match(/{{TAG}}/g).length * -30 : 0) + 
+                            (text.match(/{{GUILDNAME}}/g) ? text.match(/{{GUILDNAME}}/g).length * -19 : 0) + 
+                            (text.match(/{{COUNT}/g) ? text.match(/{{COUNT}/g).length * 4 : 0)
+                        ) return ERRORS.falseArgs(message, 'Сообщение не может быть длиннее 2000 символов!');
+
                         message.channel.send(text.replace(/{{USERNAME}}/g, message.author.username)
-                        .replace(/{{MENTION}}/g, `<@!${message.author.id}>`)
                         .replace(/{{TAG}}/g, `${message.author.tag}`)
                         .replace(/{{GUILDNAME}}/g, `${message.guild.name}`)
                         .replace(/{{COUNT}}/g, `${message.guild.members.cache.size}`))

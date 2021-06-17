@@ -59,7 +59,7 @@ module.exports = {
         member: []
     },
     help: {
-        category: "Общее",
+        category: "Прочее",
         arguments: "**Нет**",
         examples: `**${CONFIG.prefix}info** - Информация о боте`
     }

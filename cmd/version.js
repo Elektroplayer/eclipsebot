@@ -45,7 +45,7 @@ module.exports = {
         member: []
     },
     help: {
-        category: "Общее",
+        category: "Прочее",
         arguments: "**Нет**",
         examples: `**${CONFIG.prefix}version** - Версия бота и что нового`
     }

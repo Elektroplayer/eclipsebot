@@ -121,7 +121,7 @@ module.exports = {
         member: []
     },
     help: {
-        category: "Прочее",
+        category: "Общее",
         arguments: `**<user || автор>** - Покажет информацию о пользователе *(Можно ввести ID или имя)*`,
         examples: `**${CONFIG.prefix}profile** - Покажет информацию о тебе\n**${CONFIG.prefix}profile @user** -  Покажет информацию об упомянутом пользователе\n**${CONFIG.prefix}profile 111111123456789101** - Покажет информацию о пользователе с таким ID\n**${CONFIG.prefix}profile UserName** - Покажет информацию о пользователе с таким именем *(НЕ НИКОМ НА СЕРВЕРЕ)*`
     }

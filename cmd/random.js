@@ -81,7 +81,7 @@ module.exports = {
         member: []
     },
     help: {
-        category: "Прочее",
+        category: "Общее",
         arguments: `**word <Слова из которых нужно выбрать>** - Выберет рандомное слово из заданных\n**8ball** - Магический шар, отвечающий на вопросы\n**number <x>** - Выберет рандомное число от 0 до x\n**number <x> <y>** - Выберет рандомное число от x до y\n**user** - Рандомный человек с сервера\n**color** - Рандомный цвет\n\n*`,
         examples: `**${CONFIG.prefix}random word Кошка Кошечка Киска** - Выберет рандомное слово из предложенных\n**${CONFIG.prefix}random number 10** -  Рандомное число от 0 до 10\n**${CONFIG.prefix}random number 5 10** -  Рандомное число от 5 до 10\n**${CONFIG.prefix}random user** - Выберет рандомного человека\n**${CONFIG.prefix}random color** - Даст рандомный цвет`
     }

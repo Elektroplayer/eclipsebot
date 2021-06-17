@@ -39,7 +39,7 @@ module.exports = {
         member: ["MANAGE_MESSAGES"]
     },
     help: {
-        category: "Общее",
+        category: "Прочее",
         arguments: "**<text>** - Текст отзыва",
         examples: `**${CONFIG.prefix}feedback У тибя в feedback ашиба!** - Отправит отзыв с текстом "У тибя в feedback ашиба!"`
     }

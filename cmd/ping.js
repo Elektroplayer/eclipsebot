@@ -22,7 +22,7 @@ module.exports = {
         member: []
     },
     help: {
-        category: "Общее",
+        category: "Прочее",
         arguments: "**Нет**",
         examples: `**${CONFIG.prefix}ping** - Показать скорость соединения от хоста до серверов Discord`
     }

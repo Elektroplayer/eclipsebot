@@ -68,7 +68,7 @@ module.exports = {
         member: []
     },
     help: {
-        category: "Прочее",
+        category: "Общее",
         arguments: "**<user || автор>** - Покажет аватар упомянутого пользователя, а если упоминания нет, то покажет аватар автора *(Можно ввести ID или имя)*",
         examples: `**${CONFIG.prefix}avatar** - Покажет твой аватар\n**${CONFIG.prefix}avatar @user** - Покажет аватар упомянутого пользователя\n**${CONFIG.prefix}avatar 111111123456789101** - Покажет аватар пользователя с таким ID\n**${CONFIG.prefix}avatar UserName** - Покажет аватар пользователя с таким именем *(НЕ НИКОМ НА СЕРВЕРЕ)*\n**${CONFIG.prefix}avatar server** - Покажет аватар сервера`
     }

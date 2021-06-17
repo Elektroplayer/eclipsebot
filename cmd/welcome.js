@@ -80,6 +80,8 @@ module.exports = {
 
                     if(channels.length == 0) return ERRORS.noChannel(message);
                     if(channels.length == 1) {
+                        if(!message.guild.channels.cache.get(channels[0].id)) return ERRORS.falseArgs(message,'Этот канал не с этого сервера!');
+
                         set.channelID = channels[0].id;
 
                         ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[0].id}\``)
@@ -108,10 +110,14 @@ module.exports = {
                             if(!/^\d+$/.test(m.content.slice(2)) ) return ERRORS.custom(message,'Это не цифра!');
                             if(!channels[parseInt(m.content.slice(2))-1]) return ERRORS.custom(message,'Этого варианта нету!');
 
+                            if(!message.guild.channels.cache.get(channels[0].id)) return ERRORS.falseArgs(message,'Этот канал не с этого сервера!');
+
                             set.channelID = channels[parseInt(m.content.slice(2))-1].id;
 
                             ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[parseInt(m.content.slice(2))-1].id}\``)
     
+                            if(!message.guild.channels.cache.get(channels[0].id).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
+
                             set.save().catch(err => console.log(err))
                             return;
         
@@ -264,7 +270,7 @@ module.exports = {
     },
     help: {
         category: "Настройки",
-        arguments: "**enable/disable** - Включить/выключить приветствие\n**channel** - Узнать ID текущего канала для приветствий\n**channel <channel>** - Установить канал для приветствий *(можно использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее приветствие\n**message <message>** - Установить приветствие. Может содержать такие переменные, как {{USERNAME}}, {{MENTION}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
+        arguments: "**enable/disable** - Включить/выключить приветствие\n**channel** - Узнать ID текущего канала для приветствий\n**channel <channel>** - Установить канал для приветствий *(может использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее приветствие\n**message <message>** - Установить приветствие. Может содержать такие переменные, как {{USERNAME}}, {{MENTION}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
         examples: `**${CONFIG.prefix}welcome enable** - Включаем\n**${CONFIG.prefix}welcome channel приветствия** - Выбираем канал\n**${CONFIG.prefix}welcome channel** - Смотрим\n**${CONFIG.prefix}welcome embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcome embed** - Проверяем\n**${CONFIG.prefix}welcome \\\`\\\`\\\`{ "title": "Хей, {{USERNAME}}! Вотсап бро?", "description": "Ты уже {{COUNT}} браток", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcome message** - Проверяем\n`
     }
 }

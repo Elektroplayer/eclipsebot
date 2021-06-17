@@ -13,8 +13,8 @@ module.exports = {
      * @param {Array<String>} args 
      */
     run: async (bot,message,args)=> {
-        if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help defaultroles** для помощи по команде`)
-        if(!['roles', 'add', 'delete', 'enable', 'disable'].includes( args[0].toLowerCase())) return ERRORS.falseArgs(message,`Напиши **${CONFIG.prefix}help defaultroles** для помощи по команде`);
+        if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help defaultRoles** для помощи по команде`)
+        if(!['roles', 'add', 'delete', 'enable', 'disable'].includes( args[0].toLowerCase())) return ERRORS.falseArgs(message,`Напиши **${CONFIG.prefix}help defaultRoles** для помощи по команде`);
 
         let footer  = CONFIG.templates.footer.replace('USERNAME', message.author.username);
 
@@ -75,7 +75,7 @@ module.exports = {
                 }
 
                 case 'add': {
-                    if(!args[1]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help defaultroles** для помощи по команде`);
+                    if(!args[1]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help defaultRoles** для помощи по команде`);
                     
                     let roles = UTILS.findRoles(message, args[1]);
 
@@ -196,7 +196,7 @@ module.exports = {
     },
     help: {
         category: "Настройки",
-        arguments: "**enable/disable** - Включить/выключить приветствие\n**channel** - Узнать ID текущего канала для приветствий\n**channel <channel>** - Установить канал для приветствий *(можно использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее приветствие\n**message <message>** - Установить приветствие. Может содержать такие переменные, как {{USERNAME}}, {{MENTION}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
-        examples: `**${CONFIG.prefix}welcome enable** - Включаем\n**${CONFIG.prefix}welcome channel приветствия** - Выбираем канал\n**${CONFIG.prefix}welcome channel** - Смотрим\n**${CONFIG.prefix}welcome embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcome embed** - Проверяем\n**${CONFIG.prefix}welcome \\\`\\\`\\\`{ "title": "Хей, {{USERNAME}}! Вотсап бро?", "description": "Ты уже {{COUNT}} браток", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcome message** - Проверяем\n`
+        arguments: "**enable/disable** - Включить/выключить дефолтные роли\n**roles** - Показать текущие дефолтные роли роли\n**add <role>** - Добавить новую роль в список\n**delete <role>** - Удалить роль из списка",
+        examples: `**${CONFIG.prefix}defaultroles enable** - Включаем дефолтные роли\n**${CONFIG.prefix}defaultroles roles** - Смотрим какие роли уже есть\n**${CONFIG.prefix}defaultroles add Новичок** - Добавляем роль Новичок\n**${CONFIG.prefix}defaultroles delete Админ** - Удаляем роль Админ`
     }
 }

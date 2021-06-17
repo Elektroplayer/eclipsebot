@@ -33,7 +33,7 @@ module.exports = {
                 );
             }
 
-            let c = bot.commands.find(m => m.name.includes(args[0])); //  c от command.
+            let c = bot.commands.find(m => m.name.includes(args[0].toLowerCase())); //  c от command.
             
             if(!c) return ERRORS.falseArgs(message,"Такой команды/алиаса не существует!");
 

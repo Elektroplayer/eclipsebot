@@ -76,9 +76,13 @@ module.exports = {
 
                     if(channels.length == 0) return ERRORS.noChannel(message);
                     if(channels.length == 1) {
+                        if(!message.guild.channels.cache.get(channels[0].id)) return ERRORS.falseArgs(message,'Этот канал не с этого сервера!');
+
                         set.channelID = channels[0].id;
 
                         ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[0].id}\``)
+
+                        if(!message.guild.channels.cache.get(channels[0].id).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
 
                         set.save().catch(err => console.log(err))
                         return;
@@ -102,10 +106,14 @@ module.exports = {
                             if(!/^\d+$/.test(m.content.slice(2)) ) return ERRORS.custom(message,'Это не цифра!');
                             if(!channels[parseInt(m.content.slice(2))-1]) return ERRORS.custom(message,'Этого варианта нету!');
 
+                            if(!message.guild.channels.cache.get(channels[0].id)) return ERRORS.falseArgs(message,'Этот канал не с этого сервера!');
+
                             set.channelID = channels[parseInt(m.content.slice(2))-1].id;
 
                             ERRORS.success(message, `Значение \`channel\` успешно установлено на \`${channels[parseInt(m.content.slice(2))-1].id}\``)
     
+                            if(!message.guild.channels.cache.get(channels[0].id).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
+
                             set.save().catch(err => console.log(err))
                             return;
         
@@ -255,7 +263,7 @@ module.exports = {
     },
     help: {
         category: "Настройки",
-        arguments: "**enable/disable** - Включить/выключить прощания\n**channel** - Узнать ID текущего канала для прощаний\n**channel <channel>** - Установить канал для прощаний *(можно использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее прощания\n**message <message>** - Установить прощания. Может содержать такие переменные, как {{USERNAME}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
+        arguments: "**enable/disable** - Включить/выключить прощания\n**channel** - Узнать ID текущего канала для прощаний\n**channel <channel>** - Установить канал для прощаний *(может использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее прощания\n**message <message>** - Установить прощания. Может содержать такие переменные, как {{USERNAME}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
         examples: `**${CONFIG.prefix}goodbye enable** - Включаем\n**${CONFIG.prefix}goodbye channel прощания** - Выбираем канал\n**${CONFIG.prefix}goodbye channel** - Смотрим\n**${CONFIG.prefix}goodbye embed true** - Включаем эмбеды\n**${CONFIG.prefix}goodbye embed** - Проверяем\n**${CONFIG.prefix}goodbye \\\`\\\`\\\`{ "title": "Гудбай, {{USERNAME}}! Хорошего пути дальше, бро!", "description": "Осталось {{COUNT}} братоков", "color": 52736}\\\`\\\`\\\`** - Устанавливаем прощания\n**${CONFIG.prefix}goodbye message** - Проверяем\n`
     }
 }

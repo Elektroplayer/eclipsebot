@@ -20,7 +20,7 @@ module.exports = {
         if(!args[0]) {
             return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`Вот твой аватар:`).setDescription(`[Если не загрузилось](${message.author.avatarURL(options) || message.author.defaultAvatarURL})`).setImage(message.author.avatarURL(options) || message.author.defaultAvatarURL).setFooter(footer));
         } else if(args[0] == "server") {
-            if(!message.guild.iconURL({ dynamic: true, size: 512 })) return ERRORS.castom(message,`Сервер не имеет аватарки!`);
+            if(!message.guild.iconURL({ dynamic: true, size: 512 })) return ERRORS.custom(message,`Сервер не имеет аватарки!`);
             return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`Аватарка сервера`).setDescription(`[Если не загрузилось](${message.guild.iconURL(options)})`).setImage(message.guild.iconURL(options)).setFooter(footer));
         } else {
             let member = UTILS.findMembers(message, args[0])

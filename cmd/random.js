@@ -31,12 +31,12 @@ module.exports = {
 
                 if(args[1] && !args[2]) {
                     if(!/^[-]?\d+$/.test(args[1])) return ERRORS.falseArgs(message, "Разрешены только числа!")
-                    if(args[1]>999999 || args[1]<-999999) return ERRORS.falseArgs(message, "Число не должно быть больше 999999")
+                    if(args[1]>999999 || args[1]<-999999) return ERRORS.falseArgs(message, "Число должно быть в диапазоне от -999999 до 999999")
                     message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${Math.floor(Math.random() * args[1])}`))
                 }
                 else if(args[1] && args[2]) {
                     if(!/^[-]?\d+$/.test(args[1])||!/^[-]?\d+$/.test(args[2])) return ERRORS.falseArgs(message, "Разрешены только числа!")
-                    if(args[1]>999999 || args[1]<-999999 || args[2]<-999999 || args[2]>999999) return ERRORS.falseArgs(message, "Число не должно быть больше 999999");
+                    if(args[1]>999999 || args[1]<-999999 || args[2]<-999999 || args[2]>999999) return ERRORS.falseArgs(message, "Числа должны быть в диапазоне от -999999 до 999999");
                     if(args[1]==args[2]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${args[1]}`))
                     message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${getRandomInRange(Number(args[1]), Number(args[2]))}`))
                 } else return ERRORS.unknown(message);
@@ -82,7 +82,7 @@ module.exports = {
     },
     help: {
         category: "Общее",
-        arguments: `**word <Слова из которых нужно выбрать>** - Выберет рандомное слово из заданных\n**8ball** - Магический шар, отвечающий на вопросы\n**number <x>** - Выберет рандомное число от 0 до x\n**number <x> <y>** - Выберет рандомное число от x до y\n**user** - Рандомный человек с сервера\n**color** - Рандомный цвет\n\n*`,
+        arguments: `**word <Слова из которых нужно выбрать>** - Выберет рандомное слово из заданных\n**8ball** - Магический шар, отвечающий на вопросы\n**number <x>** - Выберет рандомное число от 0 до x\n**number <x> <y>** - Выберет рандомное число от x до y\n**user** - Рандомный человек с сервера\n**color** - Рандомный цвет`,
         examples: `**${CONFIG.prefix}random word Кошка Кошечка Киска** - Выберет рандомное слово из предложенных\n**${CONFIG.prefix}random number 10** -  Рандомное число от 0 до 10\n**${CONFIG.prefix}random number 5 10** -  Рандомное число от 5 до 10\n**${CONFIG.prefix}random user** - Выберет рандомного человека\n**${CONFIG.prefix}random color** - Даст рандомный цвет`
     }
 }

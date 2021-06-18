@@ -265,7 +265,7 @@ module.exports = {
     show: true,
     ownerOnly: false,
     permissions: {
-        bot: ["MANAGE_MESSAGES"],
+        bot: ["MANAGE_MESSAGES","ADD_REACTIONS"],
         member: ["ADMINISTRATOR"]
     },
     help: {

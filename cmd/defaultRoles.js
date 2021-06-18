@@ -69,7 +69,11 @@ module.exports = {
 
             switch(args[0].toLowerCase()) {
                 case 'roles': {
-                    message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.memberRoles.length != 0 ? UTILS.stringifyArray(set.memberRoles, '<@&', '>, ') : `Не установлено`));
+                    let roles = "";
+                    set.memberRoles.forEach(elm => {
+                        roles+= `<@&${elm}>`
+                    });
+                    message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(roles ? roles : `Не установлено`));
                     if (!message.guild.me.permissions.has('MANAGE_ROLES')) return ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на выдачу ролей!", "Выдайте права, иначе я не смогу выдавать роли");
                     return;
                 }

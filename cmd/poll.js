@@ -74,7 +74,7 @@ module.exports = {
     show: true,
     ownerOnly: false,
     permissions: {
-        bot: [],
+        bot: ["ADD_REACTIONS"],
         member: []
     },
     help: {

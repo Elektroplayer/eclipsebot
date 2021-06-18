@@ -20,9 +20,11 @@ module.exports = {
 
         const command = getCommand(bot, cmd.toLowerCase())
         if (!command) return
-        
-        if (!message.member.permissions.has(command.permissions.member)) return ERRORS.notPerms(message, command.permissions.member.filter(p => !message.member.permissions.has(p)));
-        if (!message.guild.me.permissions.has(command.permissions.bot)) return ERRORS.botNotPerms(message, command.permissions.bot.filter(p => !message.guild.me.permissions.has(p)));
+
+        if (!message.guild.me.permissions.has("SEND_MESSAGES") || !message.channel.permissionsFor(bot.user).has("SEND_MESSAGES")) return;
+        if (!message.guild.me.permissions.has("EMBED_LINKS") || !message.channel.permissionsFor(bot.user).has("EMBED_LINKS")) return message.channel.send('Нету возможности отправлять embed!\nВключите эту возможность для меня!');
+        if (!message.member.permissions.has(command.permissions.member) || !message.channel.permissionsFor(message.member).has(command.permissions.member)) return ERRORS.notPerms(message, command.permissions.member.filter(p => !message.member.permissions.has(p)));
+        if (!message.guild.me.permissions.has(command.permissions.bot) || !message.channel.permissionsFor(bot.user).has(command.permissions.bot)) return ERRORS.botNotPerms(message, command.permissions.bot.filter(p => !message.guild.me.permissions.has(p) || !message.channel.permissionsFor(bot.user).has(p) ));
         if (command.ownerOnly && !CONFIG.owners.includes(message.author.id)) return ERRORS.ownerOnly(message);
 
         try { 

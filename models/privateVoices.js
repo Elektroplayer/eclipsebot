@@ -6,4 +6,4 @@ const xpSchema = mongoose.Schema({
     template: String
 })
 
-module.exports = mongoose.model("privateRole", xpSchema)
+module.exports = mongoose.model("privateVoice", xpSchema)

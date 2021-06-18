@@ -33,7 +33,7 @@ function go (message, member) {
     .addField(`ID:`,`${member.id}`)
     .addField(`Роли (${roleCount}):`, `${roles}`)
     .setThumbnail(member.user.avatarURL({ dynamic: true, size: 512 })|| member.user.defaultAvatarURL)
-    .setFooter(CONFIG.colors.default); //  Создаём embed. Создал его сразу для своего удобства, потом не придётся писать это снова
+    .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username)); //  Создаём embed. Создал его сразу для своего удобства, потом не придётся писать это снова
 
     let statuses = {online: `В сети`, idle: `Не активен`, dnd: `Не беспокоить`, offline: `Не в сети`} //  Облегчаем себе жизнь
     let game

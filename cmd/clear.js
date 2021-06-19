@@ -1,7 +1,8 @@
-const CONFIG = require("../config.json");
-const ERRORS = require('../lib/errors.js');
 // eslint-disable-next-line no-unused-vars
-const { Message } = require('discord.js'), Client      = require('../lib/client.js');
+const { Message }   = require('discord.js'),
+      Client        = require('../lib/client.js'),
+      CONFIG        = require("../config.json"),
+      ERRORS        = require('../lib/errors.js');
 
 module.exports = {
     /**
@@ -9,26 +10,26 @@ module.exports = {
      * @param {Client} bot
      * @param {Array<String>} args
      */
-    run: async (bot,message,args)=> {
-
+    run: async function(bot, message, args) {
+        // Хз что ты там говорил что не работает, в итоге я просто сделал корректный счётчик очищенных сообщений
         if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help clear** для помощи по команде`);
         if(!/^[0-9]{1,}$/g.test(args[0]) || args[0] == "0" || args[0]>2000) return ERRORS.falseArgs(message, "Можно вводить только цифры, больше 0 и меньше 2000!");
 
         await message.delete();
 
-        let count = args[0];
+        let count = args[0],
+            cleaned = 0;
 
         for (let i; count;) {
             i = (count >= 100 ? 100 : count);
             count -= i;
-            await message.channel.bulkDelete(i, true);
+            const messages = Array.from(await message.channel.bulkDelete(i, true));
+            cleaned += messages.length;
         }
 
-        ERRORS.success(message,`Очищено ${args[0]} сообщений.`)
-
-        return;
+        ERRORS.success(message, `Очищено ${cleaned} сообщений.`)
     },
-    name: ["clear","clean"],
+    name: ["clear","clean", "очистить"],
     description: "Очистка сообщений",
     show: true,
     ownerOnly: false,

@@ -1,0 +1,14 @@
+{
+    "prefix": "c.",
+    "feedbackChannel": "770009648023339049",
+    "owners": ["283666032823107585"],
+    "colors": {
+        "default": "525592",
+        "errorRed": "cc0000",
+        "warnOrange": "fdb21a",
+        "successGreen": "00ce00"
+    },
+    "templates": {
+        "footer": "USERNAME | © Night Devs"
+    }
+}

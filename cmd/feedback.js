@@ -14,7 +14,8 @@ module.exports = {
         let feedback = args.join(" ");
     
         if (!feedback) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help feedback** для помощи по команде`);
-        if (!CONFIG.feedBackChannel || CONFIG.feedBackChannel === "") return;
+        if (!CONFIG.feedbackChannel || CONFIG.feedbackChannel === "") return;
+        if (feedback.length>2000) return ERRORS.falseArgs(message, 'Фидбэк не может быть длиннее 2000 символов!');
     
         let embed = new discord.MessageEmbed()
         .setColor(CONFIG.colors.default)
@@ -26,7 +27,7 @@ module.exports = {
         .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
         .setTimestamp();
     
-        bot.channels.cache.get(CONFIG.feedBackChannel).send(embed);
+        bot.channels.cache.get(CONFIG.feedbackChannel).send(embed);
     
         ERRORS.success(message,"Спасибо за фидбек! Я активно исправляю недочёты своего бота и чужое мнение для меня далеко не последнее в приоритетах.");
     },

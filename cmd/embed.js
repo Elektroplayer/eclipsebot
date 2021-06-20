@@ -9,9 +9,9 @@ module.exports = {
         
         try { //  Попыточка
             let a = JSON.parse(string).obj[0]; 
-            return message.channel.send({embed: a, disableMentions: "all"}).catch(() => ERRORS.custom(message, `Перепроверь свой embed!`) );
+            return message.channel.send({embed: a, disableMentions: "all"}).catch((err) => ERRORS.custom(message, `Ошибка! Перепроверь свой embed!`, `Подробно: \`${err}\``) );
         } catch (err) { // Если не получилось
-            return ERRORS.custom(message, `Ошибка! Перепроверь твой embed!`, `Подробно: \`${err}\``);
+            return ERRORS.custom(message, `Ошибка! Перепроверь свой embed!`, `Подробно: \`${err}\``);
         }
     },
     name: ["embed", "sendembed"],

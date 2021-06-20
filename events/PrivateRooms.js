@@ -11,6 +11,8 @@ module.exports = {
      * @param {discord.VoiceState} newState 
      */
     run: async function(bot, oldState, newState) {
+        
+        if (!oldState.guild.me.permissions.has(["MANAGE_CHANNELS","MOVE_MEMBERS"])) return;
 
         let enterType
         if(!!newState.channelID && !oldState.channelID) enterType = 'вошёл'
@@ -51,8 +53,8 @@ module.exports = {
 
             PrivateVoices.find({guildID:channel.guild.id}, async (err,set) => {
                 if(
-                    set.filter(c => channel.guild.channels.cache.get(c.channelID).parentID == channel.parentID &&
-                    channel.members.size == 0 ).length !== 0
+                    set.filter(c => channel.guild.channels.cache.get(c.channelID).parentID == channel.parentID && channel.id !== c.id).length !== 0 &&
+                    channel.members.size == 0
                 ) {
                     channel.delete().catch(() => {return});
                 }

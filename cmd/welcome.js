@@ -196,7 +196,7 @@ module.exports = {
                             .replace(/{{COUNT}}/g, `${message.guild.members.cache.size}`)).obj[0];
                             message.channel.send({embed: a, disableMentions: "everyone"});
                         } catch (err) { // Если не получилось
-                            return ERRORS.custom(message, `Ошибка! Перепроверь твой embed!`, `Подробно: \`${err}\``);
+                            return ERRORS.custom(message, `Ошибка! Перепроверь свой embed!`, `Подробно: \`${err}\``);
                         }
 
                         message.channel.send(emb).then(async msg => {

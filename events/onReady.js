@@ -1,5 +1,5 @@
 const chalk             = require('chalk');
-const { randomChoice }  = require('../lib/utils');
+// eslint-disable-next-line no-unused-vars
 const Client            = require('../lib/client');
 
 /**
@@ -25,21 +25,14 @@ module.exports = {
             `[Клиент] ID     : ${bot.user.id}\n`+
             `[Клиент] Сервера: ${bot.guilds.cache.size}`
         ));
-        
-        // Всё хуйня, давай по новой
-        // let i = 0;
-        // setInterval(
-        //     () => {
-        //         if(i >= activities(bot).length) i = 0;
-        //         bot.user.setActivity(activities(bot)[i].name, activities(bot)[i].options);
-        //         i++
-        //     }, 15000
-        // )
 
-        // Вариант получше
-        setInterval(() => {
-            const activity = randomChoice(activities(bot));
-            bot.user.setActivity(activity.name, activity.options);
-        }, 15000);
+        let i = 0;
+        setInterval(
+            () => {
+                if(i >= activities(bot).length) i = 0;
+                bot.user.setActivity(activities(bot)[i].name, activities(bot)[i].options);
+                i++
+            }, 15000
+        )
     }
 }

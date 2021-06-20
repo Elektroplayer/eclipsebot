@@ -10,13 +10,13 @@ module.exports = {
         try { //  Попыточка
             a = JSON.parse(string).obj[0]; 
         } catch (err) { // Если не получилось
-            return ERRORS.custom(message, `Ошибка! Перепроверь твой embed!`, `Подробно: \`${err}\``);
+            return ERRORS.custom(message, `Ошибка! Перепроверь свой embed!`, `Подробно: \`${err}\``);
         }
 
         let chans
         bot.guilds.cache.forEach(guild => {
             chans = guild.channels.cache.filter(m => m.type == "text" && m.permissionsFor(bot.user).has('SEND_MESSAGES'))
-            if(chans) chans.first().send({embed: a, disableMentions: "all"}).catch((err)=>{return ERRORS.custom(message, `Ошибка! Перепроверь твой embed!`, `Подробно: \`${err}\``)});
+            if(chans) chans.first().send({embed: a, disableMentions: "all"}).catch((err)=>{return ERRORS.custom(message, `Ошибка! Перепроверь свой embed!`, `Подробно: \`${err}\``)});
         });
 
     },

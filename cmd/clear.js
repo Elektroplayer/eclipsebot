@@ -1,8 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-const { Message }   = require('discord.js'),
-      Client        = require('../lib/client.js'),
-      CONFIG        = require("../config.json"),
-      ERRORS        = require('../lib/errors.js');
+const { Message }   = require('discord.js'), Client = require('../lib/client.js');
+const CONFIG        = require("../config.json");
+const ERRORS        = require('../lib/errors.js');
 
 module.exports = {
     /**
@@ -11,7 +10,6 @@ module.exports = {
      * @param {Array<String>} args
      */
     run: async function(bot, message, args) {
-        // Хз что ты там говорил что не работает, в итоге я просто сделал корректный счётчик очищенных сообщений
         if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help clear** для помощи по команде`);
         if(!/^[0-9]{1,}$/g.test(args[0]) || args[0] == "0" || args[0]>2000) return ERRORS.falseArgs(message, "Можно вводить только цифры, больше 0 и меньше 2000!");
 

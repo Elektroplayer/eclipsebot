@@ -61,6 +61,8 @@ module.exports = {
             else if(!endText.trim()) return message.channel.send(embed) //  Если в итоге все варианты оказались пустыми (почему)
             .then(async msg=> { await msg.react('✅'); msg.react('❎'); }); //  Смысл этой строки не поменялся
 
+            if(endText.length > 2000) return ERRORS.falseArgs(message, "Варианты не могут быть длиннее 2000 символов");
+
             else embed.setDescription(endText); //  А если там что-то есть, то мы добавляем его в описание
             
             message.channel.send(embed) //  Отправляем

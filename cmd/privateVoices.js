@@ -142,6 +142,8 @@ module.exports = {
 
                     let text = args.slice(1).join(" ");
 
+                    //if(!text.test(/{{USERNAME}}/) && !text.test(/{{NICKNAME}}/) && !text.test(/{{TAG}}/) )
+
                     if(text.length> 100 + 
                         (text.match(/{{USERNAME}}/g) ? text.match(/{{USERNAME}}/g).length * -20 : 0) +
                         (text.match(/{{NICKNAME}}/g) ? text.match(/{{NICKNAME}}/g).length * -20 : 0) + 
@@ -188,7 +190,7 @@ module.exports = {
     },
     help: {
         category: "Настройки",
-        arguments: "**enable/disable** - Включить/выключить приватные каналы\n**channel** - Узнать ID текущего канала для создания приватных каналов\n**channel <channel>** - Установить канал для создания приватных каналов *(может использоваться имя, ID или упоминание канала. Канал должен находиться в категории! В будущем все каналы в этой категории будут удаляться!)*\n**template** - Узнать текущий шаблон\n**template <template>** - Установить новый шаблон. Должно содержать хотя бы одну переменную {{USERNAME}}, {{NICKNAME}} или {{TAG}}",
+        arguments: "**enable/disable** - Включить/выключить приватные каналы\n**channel** - Узнать ID текущего канала для создания приватных каналов\n**channel <channel>** - Установить канал для создания приватных каналов *(может использоваться имя, ID или упоминание канала. Канал должен находиться в категории! В будущем все каналы в этой категории будут удаляться!)*\n**template** - Узнать текущий шаблон\n**template <template>** - Установить новый шаблон. Может содержать такие переменные как {{USERNAME}}, {{NICKNAME}} и {{TAG}}",
         examples: `**${CONFIG.prefix}privateVoices enable** - Включаем\n**${CONFIG.prefix}privateVoices channel [+] Создать** - Устанавливаем канал\n**${CONFIG.prefix}privateVoices channel** - Смотрим\n**${CONFIG.prefix}privateVoices template [+] {{NICKNAME}}** - Устанавливаем шаблон\n**${CONFIG.prefix}privateVoices template** - Проверяем`
     }
 }

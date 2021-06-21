@@ -165,7 +165,7 @@ module.exports = {
             
                         if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
                         else {
-                            set.message = text;
+                            set.template = text;
     
                             emb.setTitle(`Значение \`template\` успешно установлено на \`${text}\``).setColor(CONFIG.colors.successGreen).setDescription('')
                             

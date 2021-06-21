@@ -146,7 +146,7 @@ module.exports = {
                             else {
                                 set.message = stringForParse;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на \`${stringForParse}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }
@@ -181,8 +181,8 @@ module.exports = {
                             if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!')
                             else {
                                 set.message = text;
-        
-                                emb.setTitle(`Значение \`message\` успешно установлено на \`${text}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${text}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }
@@ -196,7 +196,7 @@ module.exports = {
         });
     },
     name: ["welcomedirect"],
-    description: "Настройка приветствий",
+    description: "Настройка приветствий в ЛС",
     show: true,
     ownerOnly: false,
     permissions: {
@@ -206,6 +206,6 @@ module.exports = {
     help: {
         category: "Настройки",
         arguments: "**enable/disable** - Включить/выключить приветствие\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее приветствие\n**message <message>** - Установить приветствие. Может содержать такие переменные, как {{USERNAME}}, {{MENTION}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
-        examples: `**${CONFIG.prefix}welcomedirect enable** - Включаем\n**${CONFIG.prefix}welcomedirect embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcomedirect embed** - Проверяем\n**${CONFIG.prefix}welcomedirect \\\`\\\`\\\`{ "title": "Хей, бро! Ты на сервере {{GUILDNAME}}! Удачки)", "description": "Ты уже {{COUNT}} брат", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcomedirect message** - Проверяем\n`
+        examples: `**${CONFIG.prefix}welcomedirect enable** - Включаем\n**${CONFIG.prefix}welcomedirect embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcomedirect embed** - Проверяем\n**${CONFIG.prefix}welcomedirect message \\\`\\\`\\\`{ "title": "Хей, бро! Ты на сервере {{GUILDNAME}}! Удачки)", "description": "Ты уже {{COUNT}} брат", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcomedirect message** - Проверяем\n`
     }
 }

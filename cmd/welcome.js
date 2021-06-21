@@ -211,7 +211,7 @@ module.exports = {
                             else {
                                 set.message = stringForParse;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на \`${stringForParse}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }
@@ -247,7 +247,7 @@ module.exports = {
                             else {
                                 set.message = text;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на \`${text}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${text}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }
@@ -271,6 +271,6 @@ module.exports = {
     help: {
         category: "Настройки",
         arguments: "**enable/disable** - Включить/выключить приветствие\n**channel** - Узнать ID текущего канала для приветствий\n**channel <channel>** - Установить канал для приветствий *(может использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее приветствие\n**message <message>** - Установить приветствие. Может содержать такие переменные, как {{USERNAME}}, {{MENTION}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
-        examples: `**${CONFIG.prefix}welcome enable** - Включаем\n**${CONFIG.prefix}welcome channel приветствия** - Выбираем канал\n**${CONFIG.prefix}welcome channel** - Смотрим\n**${CONFIG.prefix}welcome embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcome embed** - Проверяем\n**${CONFIG.prefix}welcome \\\`\\\`\\\`{ "title": "Хей, {{USERNAME}}! Вотсап бро?", "description": "Ты уже {{COUNT}} браток", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcome message** - Проверяем\n`
+        examples: `**${CONFIG.prefix}welcome enable** - Включаем\n**${CONFIG.prefix}welcome channel приветствия** - Выбираем канал\n**${CONFIG.prefix}welcome channel** - Смотрим\n**${CONFIG.prefix}welcome embed true** - Включаем эмбеды\n**${CONFIG.prefix}welcome embed** - Проверяем\n**${CONFIG.prefix}welcome message \\\`\\\`\\\`{ "title": "Хей, {{USERNAME}}! Вотсап бро?", "description": "Ты уже {{COUNT}} браток", "color": 52736}\\\`\\\`\\\`** - Устанавливаем приветствие\n**${CONFIG.prefix}welcome message** - Проверяем\n`
     }
 }

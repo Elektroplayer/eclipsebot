@@ -152,7 +152,7 @@ module.exports = {
 
                     message.channel.send(text.replace(/{{USERNAME}}/g, message.author.username)
                     .replace(/{{TAG}}/g, `${message.author.tag}`)
-                    .replace(/{{NICKNAME}}/g, message.member.nickname)
+                    .replace(/{{NICKNAME}}/g, message.member.nickname || message.author.username)
                     )
 
                     message.channel.send(emb).then(async msg => {

@@ -206,7 +206,7 @@ module.exports = {
                             else {
                                 set.message = stringForParse;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на \`${stringForParse}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }
@@ -240,7 +240,7 @@ module.exports = {
                             else {
                                 set.message = text;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на \`${text}\``).setColor(CONFIG.colors.successGreen).setDescription('')
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${text}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }
@@ -264,6 +264,6 @@ module.exports = {
     help: {
         category: "Настройки",
         arguments: "**enable/disable** - Включить/выключить прощания\n**channel** - Узнать ID текущего канала для прощаний\n**channel <channel>** - Установить канал для прощаний *(может использоваться имя, ID или упоминание канала)*\n**embed** - Узнать текущее значение поддержки embed\n**embed True/False** - Включить или выключить поддержку embed *(Стирает текущий message)*\n**message** - Узнать текущее прощания\n**message <message>** - Установить прощания. Может содержать такие переменные, как {{USERNAME}}, {{TAG}}, {{GUILDNAME}} и {{COUNT}}",
-        examples: `**${CONFIG.prefix}goodbye enable** - Включаем\n**${CONFIG.prefix}goodbye channel прощания** - Выбираем канал\n**${CONFIG.prefix}goodbye channel** - Смотрим\n**${CONFIG.prefix}goodbye embed true** - Включаем эмбеды\n**${CONFIG.prefix}goodbye embed** - Проверяем\n**${CONFIG.prefix}goodbye \\\`\\\`\\\`{ "title": "Гудбай, {{USERNAME}}! Хорошего пути дальше, бро!", "description": "Осталось {{COUNT}} братоков", "color": 52736}\\\`\\\`\\\`** - Устанавливаем прощания\n**${CONFIG.prefix}goodbye message** - Проверяем\n`
+        examples: `**${CONFIG.prefix}goodbye enable** - Включаем\n**${CONFIG.prefix}goodbye channel прощания** - Выбираем канал\n**${CONFIG.prefix}goodbye channel** - Смотрим\n**${CONFIG.prefix}goodbye embed true** - Включаем эмбеды\n**${CONFIG.prefix}goodbye embed** - Проверяем\n**${CONFIG.prefix}goodbye message \\\`\\\`\\\`{ "title": "Гудбай, {{USERNAME}}! Хорошего пути дальше, бро!", "description": "Осталось {{COUNT}} братоков", "color": 52736}\\\`\\\`\\\`** - Устанавливаем прощания\n**${CONFIG.prefix}goodbye message** - Проверяем\n`
     }
 }

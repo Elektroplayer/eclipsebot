@@ -30,7 +30,7 @@ module.exports = {
                 if(!channel.parentID) return;
 
                 let name = `${set.template.replace('{{USERNAME}}', member.user.username )
-                .replace('{{NICKNAME}}', member.nickname )
+                .replace('{{NICKNAME}}', member.nickname || member.user.username )
                 .replace('{{TAG}}', member.user.tag)}`;
                 
                 let newChannel = await channel.guild.channels.create(name, {

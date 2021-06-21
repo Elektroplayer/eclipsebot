@@ -135,7 +135,7 @@ module.exports = {
                 }
 
                 case 'template': {
-                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.message || `Не установлено`));
+                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.template || `Не установлено`));
                     
                     let emb = new discord.MessageEmbed().setColor(CONFIG.colors.warnOrange)
                     .setTitle('Тестовое сообщение').setDescription('Используйте галки, чтобы оставить или убрать');
@@ -180,8 +180,8 @@ module.exports = {
             }
         });
     },
-    name: ["privatevoices"],
-    description: "Настройка приветствий",
+    name: ["privatevoices","pv"],
+    description: "Настройка приватных каналов",
     show: true,
     ownerOnly: false,
     permissions: {

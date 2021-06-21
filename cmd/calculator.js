@@ -27,6 +27,6 @@ module.exports = {
     help: {
         category: "Общее",
         arguments: "**<пример>** - Само алгебраическое выражение",
-        examples: `**${CONFIG.prefix}calc 9+(4/sqrt(16))** - Решит пример данный пример`
+        examples: `**${CONFIG.prefix}calc 9+(4/sqrt(16))** - Решит данный пример`
     }
 }

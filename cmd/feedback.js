@@ -36,8 +36,8 @@ module.exports = {
     show: true,
     ownerOnly: false,
     permissions: {
-        bot: ["MANAGE_MESSAGES"],
-        member: ["MANAGE_MESSAGES"]
+        bot: [],
+        member: []
     },
     help: {
         category: "Прочее",

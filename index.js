@@ -1,9 +1,11 @@
 //  Подключение библиотек
 const discord  = require('discord.js');
 const mongoose  = require('mongoose');
+const dotenv = require('dotenv');
 
 //  Подключение файлов
 //const CONFIG    = require('./config.json');
+dotenv.config();
 const Client    = require('./lib/client.js'); //  С большой буквы потому что это класс
 
 //  Создаём клиента

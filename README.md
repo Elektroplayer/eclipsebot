@@ -27,11 +27,9 @@ Eclipse это самодостаточный Discord бот с открытым
 Чтобы запустить бота, вам необходимо:
 1. Установленный Node.JS.
 2. Установленные зависимости: `npm install`.
-3. Созданный config.json в корне:
+3. Конфигурация config.json в корне:
 ```json
 {
-    "token": "YOUR_BOT_TOKEN",
-    "mongoToken": "YOUR_MONGODB_AUTH",
     "prefix": "e.",
     "feedbackChannel": "770009648023339049",
     "owners": ["283666032823107585"],
@@ -45,6 +43,11 @@ Eclipse это самодостаточный Discord бот с открытым
         "footer": "USERNAME | © Night Devs"
     }
 }
+```
+4. .env конфигурация в корне:
+```
+TOKEN=YOUR_TOKEN
+MONGOTOKEN=YOUR_MONGO_URI
 ```
 
 **Пожалуйста, расскажите мне об ошибках или методах оптимизации!**

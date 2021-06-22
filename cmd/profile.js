@@ -112,7 +112,7 @@ module.exports = {
             })
         })
     },
-    name: ["profile","me"],
+    name: ["profile","me","userinfo"],
     description: "Информация о человеке",
     show: true,
     ownerOnly: false,

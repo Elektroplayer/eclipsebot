@@ -22,7 +22,7 @@ module.exports = {
         .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username)));
 
     },
-    name: ["server"],
+    name: ["server", "serverinfo"],
     description: "Описание сервера",
     show: true,
     ownerOnly: false,

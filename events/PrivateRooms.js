@@ -17,6 +17,9 @@ module.exports = {
         if(oldState.channelID) {
             let channel = oldState.channel;
 
+            // Появляется странная ошибка "TypeError: Cannot read property 'guild' of null", поэтому лучше пускай тут будет это условие
+            if(!channel) return console.log(oldState);
+
             var settings = await PrivateVoices.find({guildID: channel.guild.id}).exec();
             // Смотрим есть ли наш канал в категории приватных войсов
             settings = settings.filter(c => 

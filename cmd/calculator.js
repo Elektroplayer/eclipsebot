@@ -1,9 +1,11 @@
 const CONFIG          = require('../config.json');
+const ERRORS          = require('../lib/errors.js');
 const {MessageEmbed}  = require('discord.js');
 const {evaluate}      = require('mathjs');
 
 module.exports = {
     run: async (bot, message, args) => {
+        if(!args.join(" ")) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help calculator** для помощи по команде`)
         let result;
         try {
             result = evaluate(args.join(" "));

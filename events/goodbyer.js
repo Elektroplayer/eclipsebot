@@ -20,7 +20,7 @@ module.exports = {
 
             if(!channel) return; //  Тут должна быть ошибка
             if(!channel.permissionsFor(bot.user).has('SEND_MESSAGES')) return; //  Тут тоже
-            if(set.embed && (!message.guild.me.permissions.has("EMBED_LINKS") || !message.channel.permissionsFor(bot.user).has("EMBED_LINKS"))) return; //  И тут
+            if(set.embed && (!member.guild.me.permissions.has("EMBED_LINKS") || !channel.permissionsFor(bot.user).has("EMBED_LINKS"))) return; //  И тут
 
             let clearMessage = `${set.message}`
             .replace(/{{USERNAME}}/g, member.user.username)

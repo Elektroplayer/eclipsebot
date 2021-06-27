@@ -1,6 +1,7 @@
 const Goodbye = require('../models/goodbye.js');
 // eslint-disable-next-line no-unused-vars
 const Client  = require('../lib/client.js'), { GuildMember } = require('discord.js');
+const ERRORS  = require('../')
 
 module.exports = {
     name: "guildMemberRemove",
@@ -18,9 +19,9 @@ module.exports = {
 
             let channel = member.guild.channels.cache.get(set.channelID)
 
-            if(!channel) return; //  Тут должна быть ошибка
-            if(!channel.permissionsFor(bot.user).has('SEND_MESSAGES')) return; //  Тут тоже
-            if(set.embed && (!member.guild.me.permissions.has("EMBED_LINKS") || !channel.permissionsFor(bot.user).has("EMBED_LINKS"))) return; //  И тут
+            if(!channel) return ERRORS.custom({channel: member.guild.owner}, `Ошибка при поиске канала \`${set.channelID}\``);
+            if(!channel.permissionsFor(bot.user).has('SEND_MESSAGES')) return ERRORS.custom({channel: member.guild.owner}, `Нету права для отправки сообщения в канал \`${set.channelID}\``);
+            if(set.embed && (!member.guild.me.permissions.has("EMBED_LINKS") || !channel.permissionsFor(bot.user).has("EMBED_LINKS"))) return ERRORS.custom({channel: member.guild.owner}, `Нету права для отправки embed-сообщения в канал \`${set.channelID}\``);
 
             let clearMessage = `${set.message}`
             .replace(/{{USERNAME}}/g, member.user.username)
@@ -29,7 +30,7 @@ module.exports = {
             .replace(/{{GUILDNAME}}/g, `${member.guild.name}`)
             .replace(/{{COUNT}}/g, `${member.guild.members.cache.size}`)
 
-            let message = !set.embed ? clearMessage : {embed: JSON.parse(`{"obj":[${clearMessage}]}`).obj[0], disableMentions: "all"};
+            let message = !set.embed ? clearMessage : {embed: JSON.parse(`${clearMessage}`).obj[0], disableMentions: "all"};
 
             channel.send(message);
         })

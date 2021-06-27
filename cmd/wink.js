@@ -1,12 +1,14 @@
 const UTILS   = require('../lib/utils.js');
 const CONFIG  = require('../config.json');
+const ERRORS  = require('../lib/errors.js');
 
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     run: async (bot,message)=> {
         let response = await UTILS.getJsonResponse(`https://some-random-api.ml/animu/wink`);
-        
+        if(!response) ERRORS.APIErrors(message);
+
         message.channel.send(
             new MessageEmbed()
             .setColor(CONFIG.colors.default)

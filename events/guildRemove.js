@@ -1,8 +1,14 @@
 const discord = require('discord.js');
 const CONFIG  = require('../config.json');
-//const SETTINGS = require('../models/settings.js')
 // eslint-disable-next-line no-unused-vars
 const Client  = require('../lib/client.js');
+
+//  Все модели
+const DefaultRoles   = require('../models/defaultRoles.js');
+const Goodbye        = require("../models/goodbye.js");
+const PrivateVoices  = require("../models/privateVoices.js");
+const Welcome        = require("../models/welcome.js");
+const WelcomeDirect  = require("../models/welcomeDirect.js");
 
 module.exports = {
     name: "guildDelete",
@@ -11,13 +17,16 @@ module.exports = {
      * @param {discord.Guild} guild
      */
     run: async function (bot, guild) {
-        // SETTINGS.findOneAndDelete({serverID:guild.id}, (err) => {
-        //     if(err) console.log(err)
-        //     //  Заходим в БД и удаляем этот сервер.
-        //     //  Понимаю, бот не всегда работает и, возможно, какие-то сервера останутся, но их будет гораздо меньше.
-        //     //  Когда будет мало места в БД, тогда и займусь удалением остатков
-        // })
 
+        //  Сносим все настройки
+
+        DefaultRoles.deleteOne({ guildID: guild.id }, (err) => { if(err) console.log(err) });
+        Goodbye.deleteOne({ guildID: guild.id }, (err) => { if(err) console.log(err) });
+        PrivateVoices.deleteMany({ guildID: guild.id }, (err) => { if(err) console.log(err) });
+        Welcome.deleteOne({ guildID: guild.id }, (err) => { if(err) console.log(err) });
+        WelcomeDirect.deleteOne({ guildID: guild.id }, (err) => { if(err) console.log(err) });
+
+        //  Оповещаем
         bot.channels.cache.get(CONFIG.feedbackChannel).send(
             new discord.MessageEmbed().setTitle('Удалён сервер!').setColor(CONFIG.colors.errorRed)
             .addField('Имя:', guild.name)

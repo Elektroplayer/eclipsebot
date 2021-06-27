@@ -18,6 +18,8 @@ module.exports = {
 
         let response = await UTILS.getJsonResponse(`https://nekos.life/api/v2/img/` + arr[Math.floor(Math.random() * arr.length)]);
 
+        if(!response) ERRORS.APIErrors(message);
+
         message.channel.send(
             new discord.MessageEmbed()
             .setColor(CONFIG.colors.default)

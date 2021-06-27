@@ -23,7 +23,7 @@ module.exports = {
             .replace(/{{GUILDNAME}}/g, `${member.guild.name}`)
             .replace(/{{COUNT}}/g, `${member.guild.members.cache.size}`)
 
-            let message = !set.embed ? clearMessage : {embed: JSON.parse(`{"obj":[${clearMessage}]}`).obj[0], disableMentions: "all"};
+            let message = !set.embed ? clearMessage : {embed: JSON.parse(`${clearMessage}`).obj[0], disableMentions: "all"};
 
             member.send(message).catch(() => ' ');
         })

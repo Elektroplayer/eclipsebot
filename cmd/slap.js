@@ -10,10 +10,13 @@ module.exports = {
 
         if(!args[0]) return ERRORS.notArgs(message,"Упомяни того, кого хочешь ударить");
 
+        let response = await UTILS.getJsonResponse('https://nekos.life/api/v2/img/slap');
+        if(!response) ERRORS.APIErrors(message);
+
         let members = UTILS.findMembers(message, args[0]);
 
         if(members.length == 0) return ERRORS.noUser(message);
-        if(members.length == 1) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${message.author.username} ударил ${members[0].user.username}`).setImage( (await UTILS.getJsonResponse('https://nekos.life/api/v2/img/slap')).url ).setFooter(footer));
+        if(members.length == 1) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${message.author.username} ударил ${members[0].user.username}`).setImage( response.url ).setFooter(footer));
 
         let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Я нашёл нескольких похожих людей...').setFooter(footer);
         let descText = `Выбор **${CONFIG.prefix}<номер>**\n\n`, i = 1;
@@ -35,7 +38,7 @@ module.exports = {
 
                 let finMember = members[parseInt(m.content.slice(2))-1];
 
-                return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${message.author.username} ударил ${finMember.user.username}`).setImage((await UTILS.getJsonResponse('https://nekos.life/api/v2/img/slap')).url).setFooter(footer));
+                return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${message.author.username} ударил ${finMember.user.username}`).setImage(response.url).setFooter(footer));
             });
 
             collector.on('end', c => {

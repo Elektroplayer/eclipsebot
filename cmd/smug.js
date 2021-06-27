@@ -1,11 +1,13 @@
 const UTILS   = require('../lib/utils.js');
 const CONFIG  = require('../config.json');
+const ERRORS  = require('../lib/errors.js');
 
 const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     run: async (bot,message)=> {
         let response = await UTILS.getJsonResponse(`https://nekos.life/api/v2/img/smug`);
+        if(!response) ERRORS.APIErrors(message);
 
         message.channel.send(
             new MessageEmbed()

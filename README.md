@@ -28,22 +28,6 @@ Eclipse это самодостаточный Discord бот с открытым
 1. Установите [Node.JS](https://nodejs.org/ru/).
 2. Установите зависимости: `npm install`.
 3. Измените config.json в корне под себя:
-```json
-{
-    "prefix": "e.",
-    "feedbackChannel": "770009648023339049",
-    "owners": ["283666032823107585"],
-    "colors": {
-        "default": "525592",
-        "errorRed": "cc0000",
-        "warnOrange": "fdb21a",
-        "successGreen": "00ce00"
-    },
-    "templates": {
-        "footer": "USERNAME | © Night Devs"
-    }
-}
-```
 4. Установите .env конфигурация в корне:
 ```
 TOKEN=YOUR_TOKEN
@@ -59,7 +43,6 @@ MONGOTOKEN=YOUR_MONGO_URI
 `Lokilife#7962` - Очень продвинул разработку бота и улучшил мои познания в JS. *Спасибо...*<br>
 `GitRonin#8012` - Разработчик большей Front-End части сайта<br>
 `Lookins#4727` - Тестеровщик, баг хантер<br>
-`[Ueuecoyotl]#4032` - Редактор<br>
 `𝓐𝓤𝓣𝓞𝓟𝓛𝓐𝓨𝓔𝓡 [BF]#4324` - Хост-провайдер<br>
 
 ### Лицензия

@@ -15,10 +15,9 @@ module.exports = {
         if (!oldState.guild.me.permissions.has(["MANAGE_CHANNELS", "MOVE_MEMBERS"])) return;
 
         if(oldState.channelID) {
-            let channel = oldState.channel;
+            let channel = oldState.channel || oldState.guild.channel.cache.get(oldState.channelID);
 
-            // Появляется странная ошибка "TypeError: Cannot read property 'guild' of null", поэтому лучше пускай тут будет это условие
-            if(!channel) return console.log(oldState);
+            if(!channel) return //console.log(oldState);
 
             var settings = await PrivateVoices.find({guildID: channel.guild.id}).exec();
             // Смотрим есть ли наш канал в категории приватных войсов
@@ -33,7 +32,10 @@ module.exports = {
         }
 
         if(newState.channelID) {
-            let channel = newState.channel;
+            let channel = newState.channel || newState.guild.channel.cache.get(newState.channelID);
+
+            if(!channel) return //console.log(oldState);
+
             let member  = channel.guild.members.cache.get(newState.id);
 
             const settings = await PrivateVoices.findOne({guildID:channel.guild.id, channelID: channel.id}).exec();

@@ -62,7 +62,7 @@ module.exports = {
                             .addField("Канал", `${message.channel.name} (${message.channel.id})`, false)
                             .addField("Ошибка (1000 символов лимит)", `${e.stack.slice(0, 1000)}`, false)
                     )
-                    embed.setDescription("Спасибо! Отчёт отчёт об ошибке был отправлен. Очень скоро эта ошибка будет исправлена.")
+                    embed.setDescription("Спасибо! Отчёт об ошибке был отправлен. Очень скоро эта ошибка будет исправлена.")
                 }
                 
                 await msg.edit(embed)

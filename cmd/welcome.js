@@ -164,7 +164,7 @@ module.exports = {
                         if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!').setFooter('')
                         else {
                             set.embed    = fin;
-                            set.message  = fin ? `{ "title": "Добро пожаловать на сервер, {{USERNAME}}!", "description": "Ты уже {{COUNT}}", "color": 52736}` : `Добро пожаловать на сервер, {{USERNAME}}! Ты уже {{COUNT}}`
+                            set.message  = fin ? `{"obj":[{ "title": "Добро пожаловать на сервер, {{USERNAME}}!", "description": "Ты уже {{COUNT}}", "color": 52736}]}` : `Добро пожаловать на сервер, {{USERNAME}}! Ты уже {{COUNT}}`
     
                             emb.setTitle(`Значение \`embed\` успешно установлено на \`${fin}\``).setColor(CONFIG.colors.successGreen).setDescription('').setFooter('')
                             
@@ -178,7 +178,7 @@ module.exports = {
                 }
 
                 case 'message': {
-                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.message || `Не установлено`));
+                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription( !set.message ? `Не установлено` : ( set.embed ? set.message.slice(8,-2) : set.message ) ));
 
                     let emb = new discord.MessageEmbed().setColor(CONFIG.colors.warnOrange)
                     .setTitle('Тестовое сообщение').setDescription('Используйте галки, чтобы оставить или убрать');
@@ -211,7 +211,7 @@ module.exports = {
                             else {
                                 set.message = stringForParse;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse}\``)
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse.slice(8,-2)}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }

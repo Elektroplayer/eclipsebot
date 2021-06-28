@@ -70,7 +70,11 @@ module.exports = {
 
             switch(args[0].toLowerCase()) {
                 case 'channel': {
-                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.channelID || `Не установлено`));
+                    if(!args[1]) {
+                        message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.channelID || `Не установлено`));
+                        if(!message.guild.channels.cache.get(set.channelID).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
+                        return;
+                    }
 
                     let channels = UTILS.findChannels(message,args[1]);
 
@@ -160,7 +164,7 @@ module.exports = {
                         if (reaction.emoji.name == '❌') emb.setTitle("Отменено...").setColor(CONFIG.colors.successGreen).setDescription('Операция была отменена!').setFooter('')
                         else {
                             set.embed    = fin;
-                            set.message  = fin ? `{ "title": "Прощай, {{USERNAME}}!", "description": "Нас осталось только {{COUNT}}", "color": 52736}` : `Прощай, **{{USERNAME}}**! Нас осталось только {{COUNT}}!`
+                            set.message  = fin ? `{"obj":[{ "title": "Прощай, {{USERNAME}}!", "description": "Нас осталось только {{COUNT}}", "color": 52736}]}` : `Прощай, **{{USERNAME}}**! Нас осталось только {{COUNT}}!`
     
                             emb.setTitle(`Значение \`embed\` успешно установлено на \`${fin}\``).setColor(CONFIG.colors.successGreen).setDescription('').setFooter('')
                             
@@ -174,7 +178,7 @@ module.exports = {
                 }
 
                 case 'message': {
-                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.message || `Не установлено`));
+                    if(!args[1]) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription( !set.message ? `Не установлено` : ( set.embed ? set.message.slice(8,-2) : set.message ) ));
 
                     let emb = new discord.MessageEmbed().setColor(CONFIG.colors.warnOrange)
                     .setTitle('Тестовое сообщение').setDescription('Используйте галки, чтобы оставить или убрать');
@@ -206,7 +210,7 @@ module.exports = {
                             else {
                                 set.message = stringForParse;
         
-                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse}\``)
+                                emb.setTitle(`Значение \`message\` успешно установлено на `).setColor(CONFIG.colors.successGreen).setDescription(`\`${stringForParse.slice(8,-2)}\``)
                                 
                                 set.save().catch(err => console.log(err))
                             }

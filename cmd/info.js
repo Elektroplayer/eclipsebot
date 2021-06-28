@@ -23,7 +23,7 @@ module.exports = {
      * @param {Array<String>} args
      */
     run: (bot,message,args)=> {
-        if(args[0].toLowerCase() == "tegnio") {
+        if(args[0] == "tegnio") {
             let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default)
             .setTitle("Информация о боте")
             .addField("Основно?",

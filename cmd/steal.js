@@ -1,21 +1,16 @@
-const Client = require('../lib/client.js'); const { Message, MessageEmbed } = require('discord.js'); const ERRORS = require('../lib/errors.js'); const CONFIG = require('../config.json');
+const Client = require('../lib/client.js');
+const { Message, MessageEmbed } = require('discord.js');
+const ERRORS = require('../lib/errors.js');
+const CONFIG = require('../config.json');
 
 module.exports = {
   /**
- * @param {Message} message
- * @param {Client} client
- * @param {Array<String>} args
- */
+  * @param {Message} message
+  * @param {Client} client
+  * @param {Array<String>} args
+  */
   run: async function (client, message, args) {
-
-if (!message.member.hasPermission('MANAGE_EMOJIS')) {
-      	ERRORS.notPerms(message, ['MANAGE_EMOJIS'])
-      return
-    }
-    if (!args.length) {
-		ERRORS.notArgs(message, 'Дайте эмодзю')
-		return
-	}
+    if (!args.length) return ERRORS.notArgs(message);
 
     for (const emojis of args) {
       const getEmoji = discord.Util.parseEmoji(emojis)
@@ -25,6 +20,7 @@ if (!message.member.hasPermission('MANAGE_EMOJIS')) {
         message.guild.emojis
           .create(emojiURL, getEmoji.name)
           .then((emoji) => ERRORS.success(message, 'Эмодзи успешно клонировано!', `Название: \`${emoji.name}\``))
+     }
   },
   name: ['steal', 'stealemoji', 'se'],
   description: "Добавить эмодзи со стороннего сервера.",

@@ -26,15 +26,13 @@ module.exports = {
             let member = UTILS.findMembers(message, args[0])
             if(member.length == 0) return ERRORS.noUser(message);
             if(member.length == 1) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`Аватар пользователя ${member[0].user.username}:`).setDescription(`[Если не загрузилось](${member[0].user.avatarURL(options) || member[0].user.defaultAvatarURL})`).setImage(member[0].user.avatarURL(options) || member[0].user.defaultAvatarURL).setFooter(footer));
-            
-            let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Я нашёл нескольких похожих людей...').setFooter(footer);
-            let descText = `Выбор **${CONFIG.prefix}<номер>**\n\n`, i = 1;
-            member.forEach( elm => {
-                descText += `${i}. <@!${elm.id}>\n`;
-                i++;
-            });
 
-            message.channel.send(embed.setDescription(descText)).then(msg => {
+            message.channel.send(
+                new discord.MessageEmbed().setColor(CONFIG.colors.default)
+                .setTitle('Я нашёл несколько похожих людей...')
+                .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(member,'I. ', '\n')) //  Магия JS. На вход подаёшь массив из мемберов, а на выходе строка с упоминаниями людей) JS, я люблю тебя!
+                .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+            ).then(msg => {
                 let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
                 let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 10000});
     

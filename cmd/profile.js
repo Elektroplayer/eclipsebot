@@ -80,15 +80,13 @@ module.exports = {
         let member = UTILS.findMembers(message, args[0])
         if(member.length == 0) return ERRORS.noUser(message);
         if(member.length == 1) return go(message, member[0])
-        
-        let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Я нашёл нескольких похожих людей...').setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username));
-        
-        let bufferMember = [];
-        for(let i=0;i<member.length;i++) {
-            bufferMember[i] = `<@!${member[i].id}>`
-        }
 
-        message.channel.send(embed.setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(bufferMember,'I. ', '\n'))).then(msg => {
+        message.channel.send(
+            new discord.MessageEmbed().setColor(CONFIG.colors.default)
+            .setTitle('Я нашёл несколько похожих людей...')
+            .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(member,'I. ', '\n'))
+            .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+        ).then(msg => {
             let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
             let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 10000});
 

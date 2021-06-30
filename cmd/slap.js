@@ -18,14 +18,12 @@ module.exports = {
         if(members.length == 0) return ERRORS.noUser(message);
         if(members.length == 1) return message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle(`${message.author.username} ударил ${members[0].user.username}`).setImage( response.url ).setFooter(footer));
 
-        let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Я нашёл нескольких похожих людей...').setFooter(footer);
-        let descText = `Выбор **${CONFIG.prefix}<номер>**\n\n`, i = 1;
-        members.forEach( elm => {
-            descText += `${i}. <@!${elm.id}>\n`;
-            i++;
-        });
-
-        message.channel.send(embed.setDescription(descText)).then(msg => {
+        message.channel.send(
+            new discord.MessageEmbed().setColor(CONFIG.colors.default)
+            .setTitle('Я нашёл несколько похожих людей...')
+            .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(members,'I. ', '\n'))
+            .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+        ).then(msg => {
             let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
             let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 10000});
 

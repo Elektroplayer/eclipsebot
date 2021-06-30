@@ -91,15 +91,13 @@ module.exports = {
                         set.save().catch(err => console.log(err))
                         return;
                     }
-
-                    let embed = new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Я нашёл нескольких похожих каналов...').setFooter(footer);
-                    let descText = `Выбор **${CONFIG.prefix}<номер>**\n\n`, i = 1;
-                    channels.forEach( elm => {
-                        descText += `${i}. <#${elm.id}>\n`;
-                        i++;
-                    });
         
-                    message.channel.send(embed.setDescription(descText)).then(msg => {
+                    message.channel.send(
+                        new discord.MessageEmbed().setColor(CONFIG.colors.default)
+                        .setTitle('Я нашёл несколько похожих каналов...')
+                        .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(channels,'I. ', '\n'))
+                        .setFooter(CONFIG.templates.footer.replace('USERNAME', message.author.username))
+                    ).then(msg => {
                         let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
                         let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 15000});
             

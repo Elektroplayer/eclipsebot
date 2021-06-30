@@ -97,9 +97,9 @@ module.exports = {
             
                         message.channel.send(
                             new discord.MessageEmbed().setColor(CONFIG.colors.default)
-                            .setTitle('Я нашёл нескольких похожих ролей...')
+                            .setTitle('Я нашёл несколько похожих ролей...')
                             .setFooter(footer)
-                            .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n`+UTILS.stringifyArray(roles, 'I. ', '\n'))
+                            .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(roles, 'I. ', '\n'))
                         ).then(msg => {
                             let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
                             let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 15000});
@@ -152,9 +152,9 @@ module.exports = {
             
                         message.channel.send(
                             new discord.MessageEmbed().setColor(CONFIG.colors.default)
-                            .setTitle('Я нашёл нескольких похожих ролей...')
+                            .setTitle('Я нашёл несколько похожих ролей...')
                             .setFooter(footer)
-                            .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n`+UTILS.stringifyArray(roles, 'I. ', '\n'))
+                            .setDescription(`Выбор **${CONFIG.prefix}<номер>**\n\n` + UTILS.stringifyArray(roles, 'I. ', '\n'))
                         ).then(msg => {
                             let filter     = (collectedMsg) => collectedMsg.author.id == message.author.id && message.content.startsWith(CONFIG.prefix);
                             let collector  = msg.channel.createMessageCollector(filter, {max: 1, idle: 15000});

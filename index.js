@@ -1,16 +1,24 @@
 //  Подключение библиотек
-const discord   = require('discord.js');
 const mongoose  = require('mongoose');
 const dotenv    = require('dotenv');
 
 //  Подключение файлов
 dotenv.config(); //  Конфигурация (.env)
-const Client    = require('./lib/client.js'); //  С большой буквы потому что это класс
+const Client = require('./lib/client.js'); //  С большой буквы потому что это класс
 
 //  Создаём клиента
 const bot = new Client({
     ws: {
-        intents: discord.Intents.ALL,
+        intents: [
+            "GUILDS",
+            "GUILD_MEMBERS",
+            "GUILD_EMOJIS",
+            "GUILD_VOICE_STATES",
+            "GUILD_PRESENCES",
+            "GUILD_MESSAGES",
+            "GUILD_MESSAGE_REACTIONS",
+            "GUILD_MESSAGE_TYPING"
+        ],
     },
     partials: [
         "MESSAGE",

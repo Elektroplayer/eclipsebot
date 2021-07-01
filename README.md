@@ -48,6 +48,7 @@ MONGOTOKEN=YOUR_MONGO_URI
 `GitRonin#8012` - Разработчик большей Front-End части сайта<br>
 `[Ueuecoyotl]#4032` - Бывший редактор<br>
 `𝓐𝓤𝓣𝓞𝓟𝓛𝓐𝓨𝓔𝓡 [BF]#4324` - Дал хост на первое время<br>
+`wylite#0001` - Помог с командой e.steal<br>
 
 ### Донатеры
 `Xaliks#5501` - 70 рублей<br>

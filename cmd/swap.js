@@ -10,9 +10,9 @@ module.exports = {
      * @param {Array<String>} args
      */
     run: async (bot, message, args) => {
-        message.delete();
+        await message.delete();
 
-        if(!args[0]) ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help swap** для помощи по команде`)
+        if(!args[0]) return ERRORS.notArgs(message, `Напиши **${CONFIG.prefix}help swap** для помощи по команде`)
 
         let alphabets   = {
             "ru":  `ёйцукенгшщзхъфывапролджэячсмитьбю.ЁЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ,"№;:?`.split(""),
@@ -26,12 +26,21 @@ module.exports = {
             let messages = await message.channel.messages.fetch({ limit:25 })
             messages = messages.filter(m=> m.author.id == message.author.id).array()
             
-            if(messages.length <= 1) return ERRORS.custom(message, 'Предыдущее сообщение не было найдено!');
+            if(messages.length <= 1) return ERRORS.custom(message, 'Ваше предыдущее сообщение не было найдено!');
 
             inpText = messages[1].content.split("");
+        } else if (args[0] == "!") {
+            let messages = await message.channel.messages.fetch({ limit:5 })
+            messages = messages.array()
+            
+            if(messages.length <= 1) return ERRORS.custom(message, 'Предыдущее сообщение не было найдено!');
+
+            inpText = messages[0].content.split("");
         } else {
             inpText = args.join(" ").split("");
         }
+
+
 
         let outText     = ""; //  Выходной текст
 
@@ -56,7 +65,7 @@ module.exports = {
 
         })
 
-        message.channel.send(outText);
+        message.channel.send(outText.replace("@here", "`@here`").replace("@everyone", "`@everyone`"));
         
     },
     name: ["swap"],
@@ -69,7 +78,7 @@ module.exports = {
     },
     help: {
         category: "Общее",
-        arguments: "**<текст с неправильной раскладкой>** - Поменяет раскладку клавиатуры у текста",
+        arguments: "**<текст с неправильной раскладкой>** - Поменяет раскладку клавиатуры у текста\n**!** - Поменяет раскладку предыдущего сообщения\n**!!** - Поменяет раскладку предыдущего вашего сообщения",
         examples: `**${CONFIG.prefix}swap Ghbdtn? rfr e nt,z ltkf&** - Поменяет раскладку и выведет "Привет, как у тебя дела?"`
     }
 }

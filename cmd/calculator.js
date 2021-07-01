@@ -12,9 +12,8 @@ module.exports = {
         } catch (error) {
             result = "Ошибка!";
         }
-        if (typeof result === "function") {
-            result = "Ошибка!";
-        }
+        if (typeof result === "function") result = "Ошибка!";
+        
         return message.channel.send(
             new MessageEmbed().setColor(result == "Ошибка!" ? CONFIG.colors.errorRed : CONFIG.colors.default)
             .setTitle("Калькулятор")

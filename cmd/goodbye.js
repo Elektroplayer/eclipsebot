@@ -72,7 +72,7 @@ module.exports = {
                 case 'channel': {
                     if(!args[1]) {
                         message.channel.send(new discord.MessageEmbed().setColor(CONFIG.colors.default).setTitle('Текущее значение:').setDescription(set.channelID || `Не установлено`));
-                        if(!message.guild.channels.cache.get(set.channelID).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
+                        if(set.channelID && !message.guild.channels.cache.get(set.channelID).permissionsFor(bot.user).has('SEND_MESSAGES'))  ERRORS.custom(message, "ВНИМАНИЕ! У меня нет права на написание сообщений в этот канал!", "Выдайте права, иначе я не смогу туда писать");
                         return;
                     }
 

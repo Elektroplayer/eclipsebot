@@ -1,12 +1,7 @@
-// import { Client, GatewayIntentBits } from "discord.js";
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 import Main from "./structures/Main.js";
 
+mongoose.set('strictQuery', true);
+mongoose.connect(process.env.MONGO_URI!)
+
 let main = new Main();
-
-// const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-// client.login();
-
-new (class TestClass {constructor(public text:string) {}})("333");
-

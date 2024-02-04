@@ -4,7 +4,10 @@ const commands = [
   {
     name: 'ping',
     description: 'Replies with Pong!',
-  },
+  },{
+    name: 'help',
+    description: 'Справка',
+  }
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);

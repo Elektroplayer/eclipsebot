@@ -11,9 +11,19 @@ export default class Main {
     async initEvents() {
         for(let eventFileName of fs.readdirSync('./dist/events')) {
             console.log(`[loader] [events] [+] ${eventFileName}`)
-            let event = new (await import(`../events/${eventFileName}`)).default();
+            let importedFile = (await import(`../events/${eventFileName}`)).default;
 
-            Cache.client.on(event.trigger, event.exec.bind(event));
+            if(Array.isArray(importedFile)) {
+                importedFile.forEach(cls => {
+                    let event = new cls();
+
+                    Cache.client.on(event.trigger, event.exec.bind(event));
+                });
+            } else {
+                let event = new importedFile();
+
+                Cache.client.on(event.trigger, event.exec.bind(event));
+            }
         }
     }
 

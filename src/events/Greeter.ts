@@ -1,5 +1,5 @@
 import Event from '../structures/Event.js';
-import Messages from '../models/Messages.js';
+import Messages from '../models/MessagesModel.js';
 import { format } from '../lib/Utils.js'
 import { GuildMember, PermissionsBitField, TextChannel } from 'discord.js';
 import Cache from '../lib/Cache.js';

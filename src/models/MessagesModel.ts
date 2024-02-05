@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
     },
     channelID: {
         type: String,
-        default: null
+        default: undefined
     },
     message: {
         content: {

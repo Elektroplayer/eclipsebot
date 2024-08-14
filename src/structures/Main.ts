@@ -1,38 +1,20 @@
 import Cache from '../lib/Cache.js';
 import fs from 'fs';
+import Module from './Module.js';
 
 export default class Main {
     constructor() {
         Cache.client.login();
-        this.initEvents();
-        this.initCommands();
+
+        this.initModules()
     }
 
-    async initEvents() {
-        for(let eventFileName of fs.readdirSync('./dist/events')) {
-            console.log(`[loader] [events] [+] ${eventFileName}`)
-            let importedFile = (await import(`../events/${eventFileName}`)).default;
+    async initModules() {
+        for(let dirName of fs.readdirSync('./dist/modules/')) {
+            console.log(`[loader] [modules] [+] ${dirName}`)
+            let module: Module = new (await import(`../modules/${dirName}/index.js`)).default();
 
-            if(Array.isArray(importedFile)) {
-                importedFile.forEach(cls => {
-                    let event = new cls();
-
-                    Cache.client.on(event.trigger, event.exec.bind(event));
-                });
-            } else {
-                let event = new importedFile();
-
-                Cache.client.on(event.trigger, event.exec.bind(event));
-            }
-        }
-    }
-
-    async initCommands() {
-        for(let eventFileName of fs.readdirSync('./dist/commands')) {
-            console.log(`[loader] [commands] [+] ${eventFileName}`)
-            let cmd = new (await import(`../commands/${eventFileName}`)).default();
-
-            Cache.commands.push(cmd);
+            module.init();
         }
     }
 }

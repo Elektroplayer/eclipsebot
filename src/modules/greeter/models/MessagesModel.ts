@@ -13,7 +13,7 @@ const schema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    channelID: {
+    channelid: {
         type: String,
         default: undefined
     },
@@ -27,6 +27,6 @@ const schema = new mongoose.Schema({
             default: []
         }
     }
-}, { collection: 'messages' })
+}, { collection: 'messages' });
 
-export default mongoose.model('messages', schema)
+export default mongoose.model('messages', schema);

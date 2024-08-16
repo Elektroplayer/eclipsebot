@@ -2,13 +2,13 @@
 <p align="center">
 
 <a href="https://discord.gg/PHuvYMrvdr"><img src="https://img.shields.io/discord/769184583123730432?color=7289da&logo=discord&logoColor=white"></a>
-<img src="https://img.shields.io/badge/made%20by-NightDevs-blue.svg" >
+<img src="https://img.shields.io/badge/made%20by-NightDev-blue.svg" >
 <img src="https://img.shields.io/github/stars/Elektroplayer/eclipsebot.svg?style=flat">
 <img src="https://img.shields.io/github/languages/top/Elektroplayer/eclipsebot.svg">
 </p>
 
 # EclipseBot
-Eclipse - простой Discord бот с открытым исходным кодом, удобный в использовании и написанный на TypeScript.
+**Eclipse** - простой Discord бот с открытым исходным кодом, удобный в использовании и написанный на TypeScript.
 
 ### MiniWiki
 

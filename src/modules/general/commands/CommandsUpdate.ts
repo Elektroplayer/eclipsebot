@@ -10,7 +10,6 @@ import Command from '../../../structures/Command.js';
 import Cache from '../../../lib/Cache.js';
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!);
-const clientId = '1203365172010287104';
 
 export default class PingCommand extends Command {
     slashOptions = new SlashCommandBuilder().setName('cupdate').setDescription('Обновление команд');
@@ -26,6 +25,9 @@ export default class PingCommand extends Command {
         let commands: req[] = [];
         let localCommands: { [key: string]: req[] } = {};
         let buffer: req[];
+        let clientId = Cache.client.user?.id;
+
+        if (!clientId) return;
 
         for (let command of Cache.commands) {
             buffer = [];
